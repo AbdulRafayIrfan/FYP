@@ -9,6 +9,25 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <main className="min-h-screen flex flex-col items-center bg-main text-white">
+        <div className="flex">
+          <img src="/logos/BUB-logo.png" alt="BUB-logo" className="mr-2" />
+          <img
+            src="/logos/Salford-Logo.png"
+            alt="Salford-logo"
+            className="ml-2"
+          />
+        </div>
+        <h3 className="text-6xl font-bold my-2">Welcome!</h3>
+        <h6 className="text-2xl font-bold my-2">
+          Enter your details to log-in
+        </h6>
+        <input placeholder="Email" type="text" className="my-2 w-96 h-9" />
+        <input placeholder="Password" type="text" className="my-2 w-96 h-9" />
+        <p className="text-2xl font-light">
+          Forgot your password? Reset it here
+        </p>
+      </main>
     </>
   );
 }
