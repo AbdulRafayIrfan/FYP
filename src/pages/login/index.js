@@ -28,7 +28,7 @@ function Login() {
       </Head>
       <main className="flex justify-center items-center h-screen bg-secondary">
         {/* Login box from Mantine */}
-        <Box sx={{ maxWidth: 400, width: 360 }}>
+        <Box sx={{ maxWidth: 375, width: "95%" }}>
           {/* Header */}
           <header className="text-white text-center">
             <Image
