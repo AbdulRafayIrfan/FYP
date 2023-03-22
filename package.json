@@ -1,0 +1,33 @@
+{
+  "name": "fyp-project",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/server": "^11.10.0",
+    "@heroicons/react": "^2.0.16",
+    "@mantine/core": "^5.10.5",
+    "@mantine/form": "^5.10.5",
+    "@mantine/hooks": "^5.10.5",
+    "@mantine/next": "^5.10.5",
+    "@mantine/notifications": "^5.10.5",
+    "@next/font": "13.2.4",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "firebase": "^9.17.2",
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
+  }
+}
