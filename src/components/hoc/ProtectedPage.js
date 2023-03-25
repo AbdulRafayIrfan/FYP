@@ -25,5 +25,6 @@ export function protectedPage(Component) {
 
     // Only display private page component if email is verified
     return currentUser.emailVerified && <Component {...props} />;
+    // return currentUser && <Component {...props} />;
   };
 }

@@ -13,9 +13,9 @@ import Head from "next/head";
 import Image from "next/image";
 import bshLogo from "../../../public/logos/bsh-logo-white.png";
 import { useRouter } from "next/router";
-import { showNotification } from "@mantine/notifications";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useAuth } from "../../Contexts/AuthContext";
+import { notifications } from "@mantine/notifications";
 
 function Login() {
   const router = useRouter();
@@ -41,7 +41,7 @@ function Login() {
       router.push("/home");
     } catch (error) {
       const errorCode = error.code;
-      showNotification({
+      notifications.show({
         title: errorCode,
         color: "red",
         icon: <ExclamationCircleIcon />,

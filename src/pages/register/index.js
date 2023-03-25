@@ -1,7 +1,7 @@
 import { Container, PasswordInput, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Head from "next/head";
-import NextChevronBtn from "../../components/NextChevronBtn";
+import NextChevronBtn from "../../components/nextChevronBtn";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { showNotification } from "@mantine/notifications";

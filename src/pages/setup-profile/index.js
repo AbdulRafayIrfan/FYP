@@ -1,4 +1,4 @@
-import PrevChevronBtn from "@/components/PrevChevronBtn";
+import PrevChevronBtn from "@/components/prevChevronBtn";
 import { Container, Progress, Title, Text } from "@mantine/core";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";

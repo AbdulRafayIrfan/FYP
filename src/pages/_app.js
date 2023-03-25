@@ -1,7 +1,7 @@
 import { AuthProvider } from "@/Contexts/AuthContext";
 import "@/styles/globals.css";
 import { MantineProvider } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
+import { Notifications } from "@mantine/notifications";
 
 export default function App({ Component, pageProps }) {
   return (
@@ -27,11 +27,10 @@ export default function App({ Component, pageProps }) {
           },
         }}
       >
-        <NotificationsProvider position="top-center">
-          <AuthProvider>
-            <Component {...pageProps} />
-          </AuthProvider>
-        </NotificationsProvider>
+        <AuthProvider>
+          <Notifications position="top-center" />
+          <Component {...pageProps} />
+        </AuthProvider>
       </MantineProvider>
     </>
   );
