@@ -1,14 +1,13 @@
-import React from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
 
 function Layout({ children }) {
   return (
-    <>
+    <main className="bg-primary h-screen">
       <Navbar />
-      <main className="bg-primary h-max mt-0">{children}</main>
+      <section id="content">{children}</section>
       <Footer />
-    </>
+    </main>
   );
 }
 
