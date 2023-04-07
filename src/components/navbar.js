@@ -22,6 +22,8 @@ import {
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/20/solid";
 import { useAuth } from "../Contexts/AuthContext";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const HEADER_HEIGHT = rem(60);
 
@@ -102,43 +104,54 @@ const useStyles = createStyles((theme) => ({
 
 export default function Navbar() {
   // current user details
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   // Change links here
   const links = [
-    { link: "Home", label: "Home" },
-    { link: "Discussions", label: "Discussions" },
-    { link: "Assessment Support", label: "Assessment Support" },
+    { link: "home", label: "Home" },
+    { link: "discussions", label: "Discussions" },
+    { link: "assessment-support", label: "Assessment Support" },
   ];
 
-  const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0].link);
+  const router = useRouter();
+
+  function handleLogout() {
+    logout().then(() => {
+      router.push("/login");
+    });
+  }
+
+  const [opened, { toggle }] = useDisclosure(false);
   const { classes, cx } = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const items = links.map((link) => (
-    <a
+    <Link
       key={link.label}
-      href={link.link}
+      href={`/${link.link}`}
       className={cx(classes.link, {
-        [classes.linkActive]: active === link.link,
+        [classes.linkActive]: router.pathname.slice(1) === link.link,
       })}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
-      }}
     >
       {link.label}
-    </a>
+    </Link>
   ));
 
   return (
     <Header
       height={HEADER_HEIGHT}
       sx={{ backgroundColor: "#f8f9fa", border: "none" }}
+      mb="1.5rem"
     >
       <Container className={classes.header}>
-        <Image src={bshNavLogo} width={250} alt="bsh-nav-logo" />
+        {/* Navigation Bar Logo */}
+        <Image
+          onClick={() => router.push("/home")}
+          src={bshNavLogo}
+          width={250}
+          alt="bsh-nav-logo"
+          style={{ cursor: "pointer" }}
+        />
         <Group spacing={5} className={classes.links}>
           {items}
         </Group>
@@ -165,6 +178,7 @@ export default function Navbar() {
           onClose={() => setUserMenuOpened(false)}
           onOpen={() => setUserMenuOpened(true)}
           withinPortal
+          zIndex={100}
         >
           <Menu.Target>
             <UnstyledButton
@@ -193,7 +207,10 @@ export default function Navbar() {
             <Menu.Item icon={<Cog8ToothIcon className="h-4 w-4" />}>
               Account settings
             </Menu.Item>
-            <Menu.Item icon={<ArrowLeftOnRectangleIcon className="h-4 w-4" />}>
+            <Menu.Item
+              onClick={handleLogout}
+              icon={<ArrowLeftOnRectangleIcon className="h-4 w-4" />}
+            >
               Logout
             </Menu.Item>
           </Menu.Dropdown>

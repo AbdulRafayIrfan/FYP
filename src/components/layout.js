@@ -3,7 +3,7 @@ import Navbar from "./navbar";
 
 function Layout({ children }) {
   return (
-    <main className="bg-primary h-screen">
+    <main className="bg-primary h-max">
       <Navbar />
       <section id="content">{children}</section>
       <Footer />
