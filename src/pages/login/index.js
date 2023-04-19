@@ -38,6 +38,9 @@ function Login() {
       setLoading(true);
       await login(form.values.email, form.values.password);
       form.reset();
+      // Direct user to home upon successful log-in,
+      // if user is unverified, they'll be pushed to
+      // setup page
       router.push("/home");
     } catch (error) {
       const errorCode = error.code;

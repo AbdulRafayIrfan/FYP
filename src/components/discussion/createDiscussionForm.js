@@ -1,7 +1,7 @@
 import { Button, Group, Textarea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { notifications } from "@mantine/notifications";
 
@@ -27,8 +27,9 @@ function CreateDiscussionForm({ showForm }) {
       .then(() => {
         notifications.show({
           title: "Successfully posted your discussion!",
-          color: "red",
+          color: "green",
           icon: <CheckCircleIcon />,
+          autoClose: 1500,
           styles: {
             title: {
               color: "green",
@@ -36,7 +37,10 @@ function CreateDiscussionForm({ showForm }) {
               fontWeight: "bold",
               fontSize: "1rem",
             },
-            icon: { width: "1.25rem", height: "1.25rem" },
+            icon: {
+              width: "1.25rem",
+              height: "1.25rem",
+            },
           },
         });
         showForm(false);
@@ -56,6 +60,7 @@ function CreateDiscussionForm({ showForm }) {
           mb={"sm"}
           {...form.getInputProps("title")}
           required
+          autoFocus
         />
         <Textarea
           sx={{ width: "100%" }}

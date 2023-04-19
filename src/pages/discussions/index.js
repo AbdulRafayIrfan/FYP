@@ -1,9 +1,9 @@
 import { Container } from "@mantine/core";
 import Layout from "../../components/layout";
-import CreateDiscussion from "../../components/createDiscussion";
-import DiscussionList from "@/components/discussionList";
+import CreateDiscussion from "../../components/discussion/createDiscussion";
+import DiscussionList from "@/components/discussion/discussionList";
 import { useState } from "react";
-import CreateDiscussionForm from "@/components/createDiscussionForm";
+import CreateDiscussionForm from "@/components/discussion/createDiscussionForm";
 
 function Discussions() {
   const [showForm, setShowForm] = useState(false);
@@ -16,7 +16,7 @@ function Discussions() {
           display: "grid",
           gridTemplateColumns: "minmax(320px, 576px)",
           justifyItems: "center",
-          justifyContent: 'center',
+          justifyContent: "center",
           padding: 0,
         }}
       >
