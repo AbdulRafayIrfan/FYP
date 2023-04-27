@@ -37,7 +37,7 @@ export async function moderateContent(titleText, contentText) {
     // Return the original text (without shouting if applied)
     if (containsProfanity === "true") {
       return null;
-    } else {
+    } else if (containsProfanity === "false") {
       // Return object of post content (title with its content)
       return { cleanTitle: cleanedTitle, cleanContent: cleanedContent };
     }
