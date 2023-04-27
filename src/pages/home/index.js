@@ -17,6 +17,8 @@ function Home() {
     }
   }
 
+  console.log(currentUser);
+
   return (
     <Layout>
       {/* <div>{JSON.stringify(currentUser)}</div>

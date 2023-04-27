@@ -3,7 +3,7 @@ import Layout from "../../components/layout";
 function AssessmentSupport() {
   return (
     <Layout>
-      <div>This is assessment support page...</div>
+      <div>This is useful links page</div>
     </Layout>
   );
 }

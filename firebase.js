@@ -1,6 +1,7 @@
-import { initializeApp } from "firebase/app";
+import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 
 // Firebase Config
 const firebaseConfig = {
@@ -14,11 +15,14 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize firebase
-const app = initializeApp(firebaseConfig);
+// Initialize firebase (Singleton pattern, single instance only)
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // Initialize cloud firestore
 const db = getFirestore(app);
 
-export { app, auth, db };
+// Initialize Cloud Storage
+const storage = getStorage(app);
+
+export { app, auth, db, storage, ref };

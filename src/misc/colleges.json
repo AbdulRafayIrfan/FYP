@@ -1,6 +1,38 @@
 [
-  { "name": "ENGINEERING AND TECHNOLOGY", "courses": [] },
-  { "name": "BUSINESS AND LAW", "courses": [] },
-  { "name": "ARTS AND SOCIAL SCIENCE", "courses": [] },
-  { "name": "POSTGRADUATE", "courses": [] }
+  {
+    "name": "ENGINEERING AND TECHNOLOGY",
+    "courses": [
+      "Civil Engineering",
+      "Architecture",
+      "Quantity Surveying",
+      "Construction Project Management",
+      "Interior Design",
+      "Computer Networks",
+      "Software Engineering",
+      "Computer Science",
+      "Computer Science with Cyber Security"
+    ]
+  },
+  {
+    "name": "BUSINESS AND LAW",
+    "courses": [
+      "Accounting and Finance",
+      "Business and Management",
+      "Marketing",
+      "Law"
+    ]
+  },
+  {
+    "name": "ARTS AND SOCIAL SCIENCE",
+    "courses": ["Graphic Design", "Psychology", "BUB Foundation"]
+  },
+  {
+    "name": "POSTGRADUATE",
+    "courses": [
+      "Accounting and Finance",
+      "International Corporate Finance",
+      "Islamic Banking and Finance",
+      "Telecommunications, Technology and Innovation"
+    ]
+  }
 ]

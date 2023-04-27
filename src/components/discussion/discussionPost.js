@@ -3,7 +3,6 @@ import {
   Card,
   Text,
   ActionIcon,
-  Badge,
   Group,
   Center,
   Avatar,
@@ -39,6 +38,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   action: {
+    width: "3rem",
     backgroundColor:
       theme.colorScheme === "dark"
         ? theme.colors.dark[6]
@@ -57,7 +57,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function DiscussionPost({ data }) {
-  const { classes, cx, theme } = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <Card withBorder radius="sm" mb="md" className={cx(classes.card)}>
@@ -79,10 +79,12 @@ function DiscussionPost({ data }) {
 
         <Group spacing={8} mr={0}>
           <ActionIcon className={classes.action}>
-            <HandThumbUpIcon className="h-4 w-4 text-secondary" />
+            <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+            <Text fz="xs">{data.likes}</Text>
           </ActionIcon>
           <ActionIcon className={classes.action}>
-            <ChatBubbleBottomCenterTextIcon className="h-4 w-4 text-secondary" />
+            <ChatBubbleBottomCenterTextIcon className="h-4 w-4 text-secondary mr-1" />
+            <Text fz="xs">{data.comments.length}</Text>
           </ActionIcon>
         </Group>
       </Group>

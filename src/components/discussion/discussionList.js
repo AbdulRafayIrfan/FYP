@@ -45,14 +45,12 @@ function DiscussionList() {
         <DiscussionPost key={discussion.id} data={discussion.data} />
       ))
     ) : (
-      <div>There are no currently discussions</div>
+      <div>There are currently no discussions</div>
     );
   }
 
   return (
-    <section id="discussions-list" className="inline-block">
-      {renderDiscussions()}
-    </section>
+    <section className="inline-block w-full">{renderDiscussions()}</section>
   );
 }
 

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useRouter } from "next/router";
 import StageTwo from "@/components/setup_stages/stageTwo";
+import StageThree from "@/components/setup_stages/stageThree";
 
 function SetupProfile() {
   const [stage, setStage] = useState({ name: "Verify Email", num: 1 });
@@ -32,7 +33,9 @@ function SetupProfile() {
 
     if (currentUser && !emailVerified) {
       isEmailVerified();
-    } else {
+    }
+
+    if (currentUser && emailVerified) {
       setStage({ name: "Pick College", num: 2 });
     }
 
@@ -67,9 +70,9 @@ function SetupProfile() {
           </>
         );
       case 2:
-        return <StageTwo />;
+        return <StageTwo changeState={setStage} />;
       case 3:
-        return <></>;
+        return <StageThree />;
     }
   }
 

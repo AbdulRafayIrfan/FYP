@@ -110,7 +110,8 @@ export default function Navbar() {
   const links = [
     { link: "home", label: "Home" },
     { link: "discussions", label: "Discussions" },
-    { link: "assessment-support", label: "Assessment Support" },
+    { link: "time-management", label: "Time Management" },
+    { link: "useful-links", label: "Useful Links" },
   ];
 
   const router = useRouter();
@@ -148,7 +149,7 @@ export default function Navbar() {
         <Image
           onClick={() => router.push("/home")}
           src={bshNavLogo}
-          width={250}
+          width={230}
           alt="bsh-nav-logo"
           style={{ cursor: "pointer" }}
         />
@@ -186,7 +187,7 @@ export default function Navbar() {
                 [classes.userActive]: userMenuOpened,
               })}
             >
-              <Group spacing={7}>
+              <Group spacing={0}>
                 <Avatar
                   // Change here
                   src={currentUser && currentUser.photoURL}
