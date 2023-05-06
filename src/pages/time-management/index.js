@@ -21,7 +21,7 @@ function Index() {
         <title>Time management</title>
       </Head>
       <Layout>
-        <div>
+        {/* <div>
           <main>
             <Container>
               <Grid gutter="md" style={{ marginTop: 30 }}>
@@ -50,13 +50,13 @@ function Index() {
                 </Col>
                 <Col span={9}>
                   <Paper padding="md" shadow="xs" style={{ minHeight: 400 }}>
-                    <TechniqueContent technique={selectedTechnique} />
+                    {<TechniqueContent technique={selectedTechnique} /> }
                   </Paper>
                 </Col>
               </Grid>
             </Container>
           </main>
-        </div>
+        </div> */}
       </Layout>
     </>
   );

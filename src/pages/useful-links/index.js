@@ -22,7 +22,7 @@ function UsefulLinks() {
       <Layout>
         <div>Useful University Resources</div>
         <main>
-          <Container>
+          {/* <Container>
             <Grid gutter="md" style={{ marginTop: 30 }}>
               <Col span={6}>
                 <Paper padding="md" shadow="xs">
@@ -66,7 +66,7 @@ function UsefulLinks() {
                 </Paper>
               </Col>
             </Grid>
-          </Container>
+          </Container> */}
         </main>
       </Layout>
     </>
