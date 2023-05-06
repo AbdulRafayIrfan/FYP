@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Text,
@@ -9,10 +9,15 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
+import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import {
-  HandThumbUpIcon,
-  ChatBubbleBottomCenterTextIcon,
-} from "@heroicons/react/20/solid";
+  HandThumbUpIcon as HandThumbUpOutlineIcon,
+  ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextOutlineIcon,
+} from "@heroicons/react/24/outline";
+import { useRouter } from "next/router";
+import { timeSince, checkLiked } from "@/misc/misc";
+import { useAuth } from "@/Contexts/AuthContext";
+import { toggleLikePost } from "@/misc/firestoreQueries";
 
 // Custom styles for Card component
 const useStyles = createStyles((theme) => ({
@@ -56,11 +61,61 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function DiscussionPost({ data }) {
+function DiscussionPost({ data, discussionId }) {
+  const router = useRouter();
   const { classes, cx } = useStyles();
+  const postedAt = timeSince(data.postedAt);
+  const [toggleLike, setToggleLike] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [likeBtnChanging, setLikeBtnChanging] = useState(false);
+  const { currentUser } = useAuth();
+
+  // Liking system
+  useEffect(() => {
+    // Set like state variable to original in db
+    setLikes(data.likes.length);
+
+    // Check if post has been liked before or not by user
+    if (currentUser && checkLiked(data.likes, currentUser.uid)) {
+      setToggleLike(true);
+    }
+  }, [currentUser, data]);
+
+  function handleLike(e) {
+    // Disable button as the button would be changing after update from db
+    setLikeBtnChanging(true);
+    e.stopPropagation();
+
+    // Check what previous state was and accordingly make changes in firestore
+    toggleLikePost(toggleLike, discussionId, currentUser.uid)
+      .then((val) => {
+        // After firestore has been updated
+        // Update like state variable to newly returned one
+        setLikes(val, () => {
+          setToggleLike((prevState) => !prevState);
+        });
+
+        // Update thumbs up icon
+        setToggleLike((prevState) => !prevState);
+
+        // Enable button again
+        setLikeBtnChanging(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   return (
-    <Card withBorder radius="sm" mb="md" className={cx(classes.card)}>
+    <Card
+      onClick={() => {
+        router.push(`/discussions/${discussionId}`);
+      }}
+      withBorder
+      radius="sm"
+      mb="md"
+      className={cx(classes.card)}
+    >
       <Text className={classes.title} fw={500} component="a">
         {data.title}
       </Text>
@@ -71,19 +126,35 @@ function DiscussionPost({ data }) {
 
       <Group position="apart" className={classes.footer}>
         <Center>
-          <Avatar src={null} size={24} radius="xl" mr="xs" />
+          <Avatar src={data.photoURL} size={24} radius="xl" mr="xs" />
           <Text fz="sm" inline>
-            random author
+            {data.displayName}
+          </Text>
+          <Text
+            ml="xs"
+            tt="uppercase"
+            color="dimmed"
+            sx={{ fontSize: "0.65rem", marginTop: "0.3rem" }}
+          >
+            Posted {postedAt}
           </Text>
         </Center>
 
         <Group spacing={8} mr={0}>
-          <ActionIcon className={classes.action}>
-            <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
-            <Text fz="xs">{data.likes}</Text>
+          <ActionIcon
+            disabled={likeBtnChanging}
+            onClick={(e) => handleLike(e)}
+            className={classes.action}
+          >
+            {toggleLike ? (
+              <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+            ) : (
+              <HandThumbUpOutlineIcon className="h-4 w-4 text-secondary mr-1" />
+            )}
+            <Text fz="xs">{likes}</Text>
           </ActionIcon>
           <ActionIcon className={classes.action}>
-            <ChatBubbleBottomCenterTextIcon className="h-4 w-4 text-secondary mr-1" />
+            <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary mr-1" />
             <Text fz="xs">{data.comments.length}</Text>
           </ActionIcon>
         </Group>

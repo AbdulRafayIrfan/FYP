@@ -17,12 +17,17 @@ function CreateDiscussionForm({ showForm }) {
       postContent: "",
     },
 
-    // validate: {
-    //   postTitle: (value) => (value.length < 1 ? "Please give a title" : null),
-    //   postContent: (value) =>
-    //     value.length < 1 ? "Please give a description" : null,
-    // },
-    // validateInputOnChange: true,
+    validate: {
+      postTitle: (value) =>
+        !/^[a-zA-Z0-9 ]+$/.test(value)
+          ? "Letters, numbers and spaces only!"
+          : null,
+      postContent: (value) =>
+        !/^[a-zA-Z0-9 ]+$/.test(value)
+          ? "Letters, numbers and spaces only!"
+          : null,
+    },
+    validateInputOnChange: true,
   });
 
   async function moderatePost(title, content) {
@@ -56,7 +61,7 @@ function CreateDiscussionForm({ showForm }) {
         displayName: currentUser.displayName,
         photoURL: currentUser.photoURL,
         comments: [],
-        likes: 0,
+        likes: [],
         postedAt: Timestamp.now(),
       })
         .then(() => {

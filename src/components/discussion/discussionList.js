@@ -19,7 +19,6 @@ function DiscussionList() {
     setLoading(true);
     getDocs(globalDiscussions)
       .then((response) => {
-        console.log(response.docs);
         const discussions = response.docs.map((doc) => ({
           data: doc.data(),
           id: doc.id,
@@ -38,11 +37,11 @@ function DiscussionList() {
 
     return discussionList.length > 0 ? (
       discussionList.map((discussion) => (
-        // <div key={discussion.id}>
-        //   <h1>{discussion.data.title}</h1>
-        //   <p>{discussion.data.content}</p>
-        // </div>
-        <DiscussionPost key={discussion.id} data={discussion.data} />
+        <DiscussionPost
+          key={discussion.id}
+          data={discussion.data}
+          discussionId={discussion.id}
+        />
       ))
     ) : (
       <div>There are currently no discussions</div>
