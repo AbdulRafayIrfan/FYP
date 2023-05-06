@@ -11,8 +11,9 @@ import {
   Link,
   Button,
 } from "@mantine/core";
+import { protectedPage } from "@/components/hoc/protectedPage";
 
-function AssessmentSupport() {
+function UsefulLinks() {
   return (
     <>
       <Head>
@@ -72,4 +73,4 @@ function AssessmentSupport() {
   );
 }
 
-export default AssessmentSupport;
+export default protectedPage(UsefulLinks);

@@ -5,6 +5,7 @@ import DiscussionList from "@/components/discussion/discussionList";
 import { useState } from "react";
 import CreateDiscussionForm from "@/components/discussion/createDiscussionForm";
 import Head from "next/head";
+import { protectedPage } from "@/components/hoc/protectedPage";
 
 function Discussions() {
   const [showForm, setShowForm] = useState(false);
@@ -39,4 +40,4 @@ function Discussions() {
   );
 }
 
-export default Discussions;
+export default protectedPage(Discussions);

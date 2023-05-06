@@ -10,7 +10,8 @@ import {
   Group,
   Button,
 } from "@mantine/core";
-import { TechniqueContent } from "/components/techniques";
+// import { TechniqueContent } from "/components/techniques";
+import { protectedPage } from "@/components/hoc/protectedPage";
 
 function Index() {
   const [selectedTechnique, setSelectedTechnique] = useState(null);
@@ -61,4 +62,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default protectedPage(Index);
