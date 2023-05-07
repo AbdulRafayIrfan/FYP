@@ -91,9 +91,7 @@ function DiscussionPost({ data, discussionId }) {
       .then((val) => {
         // After firestore has been updated
         // Update like state variable to newly returned one
-        setLikes(val, () => {
-          setToggleLike((prevState) => !prevState);
-        });
+        setLikes(val);
 
         // Update thumbs up icon
         setToggleLike((prevState) => !prevState);

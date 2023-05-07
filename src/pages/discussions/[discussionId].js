@@ -82,6 +82,9 @@ function DiscussionDetail() {
   const [likes, setLikes] = useState(0);
   const [likeBtnChanging, setLikeBtnChanging] = useState(false);
 
+  // State variable to set focus on comment input
+  const [focus, setFocus] = useState(false);
+
   useEffect(() => {
     // Method to fetch data asynchronously
     async function fetchData(id) {
@@ -120,9 +123,7 @@ function DiscussionDetail() {
       .then((val) => {
         // After firestore has been updated
         // Update like state variable to newly returned one
-        setLikes(val, () => {
-          setToggleLike((prevState) => !prevState);
-        });
+        setLikes(val);
 
         // Update thumbs up icon
         setToggleLike((prevState) => !prevState);
@@ -216,7 +217,10 @@ function DiscussionDetail() {
                         )}
                         <Text fz="xs">{likes}</Text>
                       </ActionIcon>
-                      <ActionIcon className={classes.action}>
+                      <ActionIcon
+                        className={classes.action}
+                        onClick={() => setFocus(true)}
+                      >
                         <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary mr-1" />
                         <Text fz="xs">{data.comments.length}</Text>
                       </ActionIcon>
@@ -224,7 +228,7 @@ function DiscussionDetail() {
                   </Group>
                 </Card>
                 {/* Comment Section here with input and list of comments*/}
-                <CommentInput />
+                <CommentInput focus={focus} />
                 <CommentList commentsArray={data.comments} />
               </>
             )}

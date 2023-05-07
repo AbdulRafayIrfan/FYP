@@ -1,10 +1,16 @@
 import { Group, Text, ActionIcon, Avatar, createStyles } from "@mantine/core";
+import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import {
-  HandThumbUpIcon,
-  ChatBubbleBottomCenterTextIcon,
-} from "@heroicons/react/20/solid";
-import React from "react";
-import { timeSince } from "@/misc/misc";
+  HandThumbUpIcon as HandThumbUpOutlineIcon,
+  ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextOutlineIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
+import React, { useEffect, useState } from "react";
+import { checkLiked, timeSince } from "@/misc/misc";
+import { useAuth } from "@/Contexts/AuthContext";
+import { toggleLikeReply } from "@/misc/firestoreQueries";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   action: {
@@ -22,9 +28,52 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Reply({ replyData }) {
-  const { photoURL, displayName, postedAt, reply, likes } = replyData;
+function Reply({ replyData, commentIndex, replyIndex }) {
+  // Get discussion id from url
+  const router = useRouter();
+  const discussionId = router.query.discussionId;
+
+  const { currentUser } = useAuth();
+
+  const { photoURL, displayName, postedAt, reply } = replyData;
   const { classes } = useStyles();
+
+  // Linking functionality
+  const [toggleLike, setToggleLike] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [likeBtnChanging, setLikeBtnChanging] = useState(false);
+
+  useEffect(() => {
+    setLikes(replyData.likes.length);
+
+    if (currentUser && checkLiked(replyData.likes, currentUser.uid)) {
+      setToggleLike(true);
+    }
+  }, [replyData, currentUser]);
+
+  function handleLike() {
+    setLikeBtnChanging(true);
+
+    toggleLikeReply(
+      toggleLike,
+      discussionId,
+      currentUser.uid,
+      commentIndex,
+      replyIndex
+    )
+      .then((val) => {
+        setLikes(val);
+
+        // Update thumbs up icon
+        setToggleLike((prevState) => !prevState);
+
+        // Enable button again
+        setLikeBtnChanging(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   return (
     <>
@@ -39,12 +88,20 @@ function Reply({ replyData }) {
         {reply}
       </Text>
       <Group mt="xs">
-        <ActionIcon className={classes.action}>
-          <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+        <ActionIcon
+          disabled={likeBtnChanging}
+          onClick={() => handleLike()}
+          className={classes.action}
+        >
+          {toggleLike ? (
+            <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+          ) : (
+            <HandThumbUpOutlineIcon className="h-4 w-4 text-secondary mr-1" />
+          )}
           <Text fz="xs">{likes}</Text>
         </ActionIcon>
         <ActionIcon className={classes.action}>
-          <ChatBubbleBottomCenterTextIcon className="h-4 w-4 text-secondary" />
+          <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary" />
         </ActionIcon>
       </Group>
     </>

@@ -1,8 +1,10 @@
 import { Textarea, Button } from "@mantine/core";
-import React from "react";
+import React, { useRef } from "react";
 import { useForm } from "@mantine/form";
 
-function CommentInput() {
+function CommentInput({ focus }) {
+  const ref = useRef(null);
+
   const form = useForm({
     initialValues: {
       commentInput: "",
@@ -20,6 +22,10 @@ function CommentInput() {
     console.log("Test");
   }
 
+  if (focus) {
+    ref.current.focus();
+  }
+
   return (
     <section id="comment-input" className="text-right">
       <form onSubmit={handleSubmit}>
@@ -28,6 +34,7 @@ function CommentInput() {
           {...form.getInputProps("commentInput")}
           sx={{ width: "100%" }}
           placeholder="What are your thoughts?"
+          ref={ref}
         />
         {form.values.commentInput.length > 0 ? (
           <Button my={"sm"} color="red">

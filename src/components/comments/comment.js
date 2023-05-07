@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createStyles, Text, Avatar, Group, ActionIcon } from "@mantine/core";
 import { timeSince } from "@/misc/misc";
+import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import {
-  ChatBubbleBottomCenterTextIcon,
-  ChevronDownIcon,
+  HandThumbUpIcon as HandThumbUpOutlineIcon,
+  ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextOutlineIcon,
   ChevronUpIcon,
-  HandThumbUpIcon,
-} from "@heroicons/react/20/solid";
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 import RepliesList from "../replies/repliesList";
 import { useRouter } from "next/router";
+import { useAuth } from "@/Contexts/AuthContext";
+import { checkLiked } from "@/misc/misc";
+import { toggleLikeComment } from "@/misc/firestoreQueries";
 
 const useStyles = createStyles((theme) => ({
   action: {
@@ -41,16 +45,51 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Comment({ commentData, commentIndex }) {
+  // Get discussion id from url
   const router = useRouter();
   const discussionId = router.query.discussionId;
 
-  const { comment, displayName, likes, photoURL, postedAt, replies } =
-    commentData;
+  // Current user details
+  const { currentUser } = useAuth();
+
+  const { comment, displayName, photoURL, postedAt, replies } = commentData;
   const { classes } = useStyles();
   const [repliesOpen, setRepliesOpen] = useState(false);
 
+  // Linking Functionality
+  const [toggleLike, setToggleLike] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [likeBtnChanging, setLikeBtnChanging] = useState(false);
+
+  useEffect(() => {
+    setLikes(commentData.likes.length);
+
+    if (currentUser && checkLiked(commentData.likes, currentUser.uid)) {
+      setToggleLike(true);
+    }
+  }, [commentData, currentUser]);
+
   function toggleReplies() {
     setRepliesOpen((prevState) => !prevState);
+  }
+
+  function handleLike() {
+    setLikeBtnChanging(true);
+
+    // Check what previous state was and accordingly make changes in firestore
+    toggleLikeComment(toggleLike, discussionId, currentUser.uid, commentIndex)
+      .then((val) => {
+        setLikes(val);
+
+        // Update thumbs up icon
+        setToggleLike((prevState) => !prevState);
+
+        // Enable button again
+        setLikeBtnChanging(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return (
@@ -67,12 +106,20 @@ function Comment({ commentData, commentIndex }) {
           {comment}
         </Text>
         <Group mt="xs">
-          <ActionIcon className={classes.action}>
-            <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+          <ActionIcon
+            disabled={likeBtnChanging}
+            onClick={(e) => handleLike(e)}
+            className={classes.action}
+          >
+            {toggleLike ? (
+              <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+            ) : (
+              <HandThumbUpOutlineIcon className="h-4 w-4 text-secondary mr-1" />
+            )}
             <Text fz="xs">{likes}</Text>
           </ActionIcon>
           <ActionIcon className={classes.action}>
-            <ChatBubbleBottomCenterTextIcon className="h-4 w-4 text-secondary" />
+            <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary" />
           </ActionIcon>
         </Group>
         {/* Replies section */}
@@ -94,7 +141,7 @@ function Comment({ commentData, commentIndex }) {
         )}
         {repliesOpen && (
           <div id="replies-list" className="ml-12">
-            <RepliesList repliesArray={replies} />
+            <RepliesList repliesArray={replies} commentIndex={commentIndex} />
           </div>
         )}
       </div>

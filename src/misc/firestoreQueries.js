@@ -1,8 +1,24 @@
 import { db } from "../../firebase";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  FieldPath,
+} from "firebase/firestore";
 
-// global discussion list
+// different discussions list
 const globalDiscussions = collection(db, "discussions/global/discussionList");
+const ictDiscussions = collection(db, "discussions/ict/discussionList");
+const businessDiscussions = collection(
+  db,
+  "discussions/business/discussionList"
+);
+const artDiscussions = collection(db, "discussions/arts/discussionList");
+const postgradDiscussions = collection(
+  db,
+  "discussions/postgraduate/discussionList"
+);
 
 // Get data of a discussion document from the ID
 export async function getDiscussionDetails(discussionId) {
@@ -20,16 +36,6 @@ export async function getDiscussionDetails(discussionId) {
     return null;
   }
 }
-
-// async function getDocumentById(id) {
-//   try {
-//     const docRef = doc(db, "discussions/global/discussionList", id);
-//     const
-
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
 
 // Add or removes the user from the liked list of a post
 export async function toggleLikePost(prevState, discussionId, uid) {
@@ -71,7 +77,95 @@ export async function toggleLikePost(prevState, discussionId, uid) {
   });
 }
 
-export async function toggleLikeComment() {
-  
+export async function toggleLikeComment(
+  prevState,
+  discussionId,
+  uid,
+  commentIndex
+) {
+  return new Promise((resolve, reject) => {
+    const docRef = doc(globalDiscussions, discussionId);
+
+    getDoc(docRef)
+      .then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          const data = docSnapshot.data();
+          let newArray = data.comments;
+
+          if (prevState) {
+            newArray[commentIndex].likes = newArray[commentIndex].likes.filter(
+              (val) => val !== uid
+            );
+          } else {
+            // Push the UID of the user who liked
+            newArray[commentIndex].likes.push(uid);
+          }
+
+          updateDoc(docRef, { comments: newArray })
+            .then(() => {
+              console.log("Successfully updated");
+              resolve(newArray[commentIndex].likes.length);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(error); // Reject the promise if an error occurs
+            });
+        } else {
+          console.log("Document not found");
+          resolve(null); // Resolve the promise with a default value if the document doesn't exist
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
 }
-export async function toggleLikeReply() {}
+
+export async function toggleLikeReply(
+  prevState,
+  discussionId,
+  uid,
+  commentIndex,
+  replyIndex
+) {
+  return new Promise((resolve, reject) => {
+    const docRef = doc(globalDiscussions, discussionId);
+
+    getDoc(docRef)
+      .then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          const data = docSnapshot.data();
+          let newArray = data.comments;
+
+          if (prevState) {
+            newArray[commentIndex].replies[replyIndex].likes = newArray[
+              commentIndex
+            ].replies[replyIndex].likes.filter((val) => val !== uid);
+          } else {
+            // Push UID of user into likes array inside replies
+            newArray[commentIndex].replies[replyIndex].likes.push(uid);
+          }
+
+          updateDoc(docRef, { comments: newArray })
+            .then(() => {
+              console.log("Successfully updated");
+              resolve(newArray[commentIndex].replies[replyIndex].likes.length);
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(error); // Reject the promise if an error occurs
+            });
+        } else {
+          console.log("Document not found");
+          resolve(null); // Resolve the promise with a default value if the document doesn't exist
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
+
+export async function addComment() {}

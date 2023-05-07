@@ -195,10 +195,9 @@ export default function Navbar() {
                   radius="xl"
                   size={20}
                 />
-                <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                  {/* Change here */}
+                {/* <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                   {currentUser && currentUser.displayName}
-                </Text>
+                </Text> */}
                 <ChevronDownIcon className="h-4 w-4" />
               </Group>
             </UnstyledButton>

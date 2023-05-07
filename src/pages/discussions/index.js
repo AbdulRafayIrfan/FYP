@@ -6,6 +6,7 @@ import { useState } from "react";
 import CreateDiscussionForm from "@/components/discussion/createDiscussionForm";
 import Head from "next/head";
 import { protectedPage } from "@/components/hoc/protectedPage";
+import QueryDiscussion from "@/components/discussion/queryDiscussion";
 
 function Discussions() {
   const [showForm, setShowForm] = useState(false);
@@ -29,6 +30,7 @@ function Discussions() {
           {!showForm ? (
             <>
               <CreateDiscussion showForm={setShowForm} />
+              <QueryDiscussion />
               <DiscussionList />
             </>
           ) : (
