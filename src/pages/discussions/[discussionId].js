@@ -13,6 +13,7 @@ import {
   rem,
   createStyles,
   Button,
+  Loader,
 } from "@mantine/core";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import {
@@ -157,7 +158,9 @@ function DiscussionDetail() {
         >
           <section className="inline-block w-full">
             {!data ? (
-              <div>Loading...</div>
+              <div className="text-center mt-2">
+                <Loader color="red" size="lg" />
+              </div>
             ) : (
               <>
                 <Button

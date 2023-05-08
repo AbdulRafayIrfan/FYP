@@ -2,6 +2,7 @@ import { useAuth } from "@/Contexts/AuthContext";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Loader } from "@mantine/core";
 
 export default function Index() {
   const { loading, currentUser } = useAuth();
@@ -33,7 +34,11 @@ export default function Index() {
         <title>BUB Student Hub</title>
       </Head>
       {/* Loading animation here... */}
-      {loading && <div>Loading...</div>}
+      {loading && (
+        <div className="text-center mt-[50%] bg-secondary">
+          <Loader color="white" size="xl" />
+        </div>
+      )}
     </>
   );
 }

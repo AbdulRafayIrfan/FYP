@@ -56,6 +56,7 @@ function ReplyInput({ replyingTo, commentIndex }) {
   }
 
   async function handleSubmit(e) {
+    setLoading(true);
     e.preventDefault();
     // Get the data of the discussion post
     const discussionData = await getDiscussionDetails(discussionId);
@@ -91,6 +92,7 @@ function ReplyInput({ replyingTo, commentIndex }) {
               },
             },
           });
+          setLoading(false);
           router.reload();
         })
         .catch((error) => console.error(error));

@@ -2,6 +2,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../../firebase";
 import DiscussionPost from "./discussionPost";
+import { Loader } from "@mantine/core";
 
 function DiscussionList() {
   const [discussionList, setDiscussionList] = useState([]);
@@ -33,7 +34,12 @@ function DiscussionList() {
   }
 
   function renderDiscussions() {
-    if (loading) return <div>Loading...</div>;
+    if (loading)
+      return (
+        <div className="text-center mt-2">
+          <Loader color="red" size="lg" />
+        </div>
+      );
 
     return discussionList.length > 0 ? (
       discussionList.map((discussion) => (

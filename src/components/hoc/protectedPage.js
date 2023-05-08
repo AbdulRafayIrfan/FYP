@@ -1,6 +1,7 @@
 import { useAuth } from "../../Contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { Loader } from "@mantine/core";
 
 export function protectedPage(Component) {
   return function ProtectedPage(props) {
@@ -21,7 +22,12 @@ export function protectedPage(Component) {
     }, [loading, currentUser, router]);
 
     // Loading animation here
-    if (loading) return <div>Loading...</div>;
+    if (loading)
+      return (
+        <div className="text-center mt-[50%] bg-secondary">
+          <Loader color="white" size="xl" />
+        </div>
+      );
 
     // Only display private page component if email is verified
     if (currentUser && currentUser.emailVerified)

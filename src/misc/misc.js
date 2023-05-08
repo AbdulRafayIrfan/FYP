@@ -30,3 +30,11 @@ export function timeSince(date) {
 export function checkLiked(likes, uid) {
   return likes.includes(uid);
 }
+
+export function timerDisplay(secondsLeft) {
+  const minutes = Math.floor(secondsLeft / 60);
+  let seconds = secondsLeft % 60;
+  if (seconds < 10) seconds = "0" + seconds;
+
+  return `${minutes}:${seconds}`;
+}

@@ -1,62 +1,54 @@
 import Layout from "@/components/layout";
 import Head from "next/head";
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Grid,
-  Col,
-  Paper,
   Text,
-  Group,
-  Button,
 } from "@mantine/core";
-// import { TechniqueContent } from "/components/techniques";
 import { protectedPage } from "@/components/hoc/protectedPage";
+import TechniqueSelector from "@/components/time-management/techniqueSelector";
+import TechniqueContent from "@/components/time-management/techniqueContent";
 
 function Index() {
-  const [selectedTechnique, setSelectedTechnique] = useState(null);
+  let techniquesData = require("../../misc/techniqueList.json");
+  const [selectedTechnique, setSelectedTechnique] = useState("Pomodoro");
   return (
     <>
       <Head>
         <title>Time management</title>
       </Head>
       <Layout>
-        {/* <div>
-          <main>
-            <Container>
-              <Grid gutter="md" style={{ marginTop: 30 }}>
-                <Col span={3}>
-                  <Paper padding="md" shadow="xs">
-                    <Text size="xl" weight={700} style={{ marginBottom: 20 }}>
-                      Techniques
-                    </Text>
-                    <Group direction="column" spacing="md">
-                      {techniques.map((technique) => (
-                        <Button
-                          key={technique.id}
-                          onClick={() => setSelectedTechnique(technique.id)}
-                          variant={
-                            selectedTechnique === technique.id
-                              ? "filled"
-                              : "light"
-                          }
-                          fullWidth
-                        >
-                          {technique.name}
-                        </Button>
-                      ))}
-                    </Group>
-                  </Paper>
-                </Col>
-                <Col span={9}>
-                  <Paper padding="md" shadow="xs" style={{ minHeight: 400 }}>
-                    {<TechniqueContent technique={selectedTechnique} /> }
-                  </Paper>
-                </Col>
-              </Grid>
-            </Container>
-          </main>
-        </div> */}
+        <Container mb={"md"} size="xs">
+          <section id="heading" className="text-center mb-8">
+            <Text fw={700} color="gray.7" tt={"uppercase"} fz="xl">
+              Improve Your{" "}
+              <Text color="red" component="span">
+                Productivity
+              </Text>{" "}
+              and{" "}
+              <Text color="red" component="span">
+                Focus
+              </Text>
+            </Text>
+          </section>
+          <Grid>
+            <Grid.Col span={4}>
+              {techniquesData.map((val, idx) => {
+                return (
+                  <TechniqueSelector
+                    onClick={setSelectedTechnique}
+                    key={idx}
+                    data={val}
+                  />
+                );
+              })}
+            </Grid.Col>
+            <Grid.Col span={8}>
+              <TechniqueContent technique={selectedTechnique} />
+            </Grid.Col>
+          </Grid>
+        </Container>
       </Layout>
     </>
   );
