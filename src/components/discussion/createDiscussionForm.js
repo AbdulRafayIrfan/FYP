@@ -6,10 +6,12 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { notifications } from "@mantine/notifications";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { useAuth } from "@/Contexts/AuthContext";
+import { useState } from "react";
 
 function CreateDiscussionForm({ showForm }) {
   const { currentUser } = useAuth();
   const globalDiscussions = collection(db, "discussions/global/discussionList");
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -47,6 +49,7 @@ function CreateDiscussionForm({ showForm }) {
   }
 
   async function handleSubmit(e) {
+    setLoading(true);
     e.preventDefault();
     // Testing moderation
     const cleanData = await moderatePost(
@@ -83,6 +86,7 @@ function CreateDiscussionForm({ showForm }) {
               },
             },
           });
+          setLoading(false);
           showForm(false);
         })
         .catch((error) => console.error(error.message));
@@ -106,6 +110,7 @@ function CreateDiscussionForm({ showForm }) {
           },
         },
       });
+      setLoading(false);
     }
   }
 
@@ -135,7 +140,7 @@ function CreateDiscussionForm({ showForm }) {
           {form.errors > 0 ? (
             <Button disabled>Post</Button>
           ) : (
-            <Button color="red" type="submit">
+            <Button loading={loading} color="red" type="submit">
               Post
             </Button>
           )}

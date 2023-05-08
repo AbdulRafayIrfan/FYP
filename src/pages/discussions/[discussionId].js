@@ -87,6 +87,7 @@ function DiscussionDetail() {
 
   useEffect(() => {
     // Method to fetch data asynchronously
+    // When discussion id is set
     async function fetchData(id) {
       const discussionData = await getDiscussionDetails(id);
 
@@ -97,7 +98,9 @@ function DiscussionDetail() {
       }
     }
 
-    fetchData(discussionId);
+    if (discussionId) {
+      fetchData(discussionId);
+    }
   }, [discussionId]);
 
   // useEffect for liking system similar to other files

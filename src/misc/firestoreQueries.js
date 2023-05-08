@@ -7,7 +7,7 @@ import {
   FieldPath,
 } from "firebase/firestore";
 
-// different discussions list
+// different discussions lists
 const globalDiscussions = collection(db, "discussions/global/discussionList");
 const ictDiscussions = collection(db, "discussions/ict/discussionList");
 const businessDiscussions = collection(
@@ -167,5 +167,3 @@ export async function toggleLikeReply(
       });
   });
 }
-
-export async function addComment() {}

@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/Contexts/AuthContext";
 import { checkLiked } from "@/misc/misc";
 import { toggleLikeComment } from "@/misc/firestoreQueries";
+import ReplyInput from "../replies/replyInput";
 
 const useStyles = createStyles((theme) => ({
   action: {
@@ -55,6 +56,7 @@ function Comment({ commentData, commentIndex }) {
   const { comment, displayName, photoURL, postedAt, replies } = commentData;
   const { classes } = useStyles();
   const [repliesOpen, setRepliesOpen] = useState(false);
+  const [showReplyInput, setShowReplyInput] = useState(false);
 
   // Linking Functionality
   const [toggleLike, setToggleLike] = useState(false);
@@ -92,6 +94,11 @@ function Comment({ commentData, commentIndex }) {
       });
   }
 
+  // Function to toggle the reply input component
+  function toggleReplyInput() {
+    setShowReplyInput((prevState) => !prevState);
+  }
+
   return (
     <>
       <div className="bg-white rounded my-4 p-3 border border-[#E9ECEF]">
@@ -118,10 +125,13 @@ function Comment({ commentData, commentIndex }) {
             )}
             <Text fz="xs">{likes}</Text>
           </ActionIcon>
-          <ActionIcon className={classes.action}>
+          <ActionIcon onClick={toggleReplyInput} className={classes.action}>
             <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary" />
           </ActionIcon>
         </Group>
+        {showReplyInput && (
+          <ReplyInput replyingTo={displayName} commentIndex={commentIndex} />
+        )}
         {/* Replies section */}
         {replies.length > 0 && (
           <ActionIcon

@@ -152,6 +152,7 @@ export default function Navbar() {
           width={230}
           alt="bsh-nav-logo"
           style={{ cursor: "pointer" }}
+          priority
         />
         <Group spacing={5} className={classes.links}>
           {items}

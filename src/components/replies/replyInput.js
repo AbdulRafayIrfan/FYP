@@ -1,5 +1,5 @@
 import { Textarea, Button } from "@mantine/core";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "@mantine/form";
 import { Timestamp, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/Contexts/AuthContext";
@@ -10,37 +10,36 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
+import { getDiscussionDetails } from "@/misc/firestoreQueries";
 
-function CommentInput({ focus }) {
+function ReplyInput({ replyingTo, commentIndex }) {
   const router = useRouter();
   const discussionId = router.query.discussionId;
   const [loading, setLoading] = useState(false);
 
   const { currentUser } = useAuth();
+
   // Reference to the current document in firestore
   const documentRef = doc(
     db,
     `discussions/global/discussionList/${discussionId}`
   );
 
-  // Ref for comment input
-  const ref = useRef(null);
-
   const form = useForm({
     initialValues: {
-      commentInput: "",
+      replyInput: `@${replyingTo}: `,
     },
 
     validateInputOnChange: true,
 
     // DO VALIDATION HERE
     validate: {
-      commentInput: (value) =>
-        !/^[a-zA-Z0-9@. ]+$/.test(value) ? "No invalid characters!" : null,
+      replyInput: (value) =>
+        !/^[a-zA-Z0-9@.: ]+$/.test(value) ? "No invalid characters!" : null,
     },
   });
 
-  async function moderateComment(title) {
+  async function moderateReply(title) {
     const res = await fetch("/api/moderate-content", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,25 +56,25 @@ function CommentInput({ focus }) {
   }
 
   async function handleSubmit(e) {
-    setLoading(true);
-    // Prevent default behaviour
     e.preventDefault();
-    // Check for profanity first
-    const cleanData = await moderateComment(form.values.commentInput);
-    // Accordingly post comment or warn user
+    // Get the data of the discussion post
+    const discussionData = await getDiscussionDetails(discussionId);
+    const newCommentArray = discussionData.comments;
+    // Check for profanity
+    const cleanData = await moderateReply(form.values.replyInput);
     if (cleanData) {
-      // Make new comment object to add to comments array
-      const newComment = {
-        comment: cleanData.cleanContent,
+      // Make new reply object and add to replies array
+      const newReply = {
+        reply: cleanData.cleanContent,
         displayName: currentUser.displayName,
         photoURL: currentUser.photoURL,
         likes: [],
-        replies: [],
         postedAt: Timestamp.now(),
       };
-      // Update comments array in firestore to add new comment
+      // Push the reply into the replies array
+      newCommentArray[commentIndex].replies.push(newReply);
       updateDoc(documentRef, {
-        comments: arrayUnion(newComment),
+        comments: newCommentArray,
       })
         .then(() => {
           notifications.show({
@@ -92,8 +91,6 @@ function CommentInput({ focus }) {
               },
             },
           });
-          setLoading(false);
-          // Reload page, to let user see their comment
           router.reload();
         })
         .catch((error) => console.error(error));
@@ -117,32 +114,26 @@ function CommentInput({ focus }) {
           },
         },
       });
-      
+      setLoading(false);
     }
   }
 
-  // Focus input field
-  if (focus) {
-    ref.current.focus();
-  }
-
   return (
-    <section id="comment-input" className="text-right">
-      <form onSubmit={(e) => handleSubmit(e)}>
+    <section id="reply-input" className="mt-4 text-right">
+      <form className="inline-block w-[95%]" onSubmit={(e) => handleSubmit(e)}>
         <Textarea
+          autoFocus
           required
-          {...form.getInputProps("commentInput")}
-          sx={{ width: "100%" }}
-          placeholder="What are your thoughts?"
-          ref={ref}
+          {...form.getInputProps("replyInput")}
+          placeholder=""
         />
-        {form.values.commentInput.length > 0 ? (
-          <Button loading={loading} type="submit" my={"sm"} color="red">
-            Comment
+        {form.values.replyInput.length > 0 ? (
+          <Button compact loading={loading} type="submit" my={"xs"} color="red">
+            Reply
           </Button>
         ) : (
-          <Button disabled my={"sm"} color="red">
-            Comment
+          <Button compact disabled my={"sm"} color="red">
+            Reply
           </Button>
         )}
       </form>
@@ -150,4 +141,4 @@ function CommentInput({ focus }) {
   );
 }
 
-export default CommentInput;
+export default ReplyInput;

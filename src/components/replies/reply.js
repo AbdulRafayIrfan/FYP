@@ -11,6 +11,7 @@ import { checkLiked, timeSince } from "@/misc/misc";
 import { useAuth } from "@/Contexts/AuthContext";
 import { toggleLikeReply } from "@/misc/firestoreQueries";
 import { useRouter } from "next/router";
+import ReplyInput from "./replyInput";
 
 const useStyles = createStyles((theme) => ({
   action: {
@@ -40,6 +41,7 @@ function Reply({ replyData, commentIndex, replyIndex }) {
 
   // Linking functionality
   const [toggleLike, setToggleLike] = useState(false);
+  const [showReplyInput, setShowReplyInput] = useState(false);
   const [likes, setLikes] = useState(0);
   const [likeBtnChanging, setLikeBtnChanging] = useState(false);
 
@@ -50,6 +52,11 @@ function Reply({ replyData, commentIndex, replyIndex }) {
       setToggleLike(true);
     }
   }, [replyData, currentUser]);
+
+  // Toggle visibility of reply input
+  function toggleReplyInput() {
+    setShowReplyInput((prevState) => !prevState);
+  }
 
   function handleLike() {
     setLikeBtnChanging(true);
@@ -100,10 +107,13 @@ function Reply({ replyData, commentIndex, replyIndex }) {
           )}
           <Text fz="xs">{likes}</Text>
         </ActionIcon>
-        <ActionIcon className={classes.action}>
+        <ActionIcon onClick={toggleReplyInput} className={classes.action}>
           <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary" />
         </ActionIcon>
       </Group>
+      {showReplyInput && (
+        <ReplyInput commentIndex={commentIndex} replyingTo={displayName} />
+      )}
     </>
   );
 }
