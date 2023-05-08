@@ -44,7 +44,14 @@ function EisenhowerMatrix() {
             DO
           </Text>
           <form onSubmit={(e) => handleOne(e)}>
-            <TextInput required ref={ref1} ml="0.5rem" my={"xs"} w={"90%"} />
+            <TextInput
+              placeholder="Type task here.."
+              required
+              ref={ref1}
+              ml="0.5rem"
+              my={"xs"}
+              w={"90%"}
+            />
           </form>
           <ul className="my-0 px-7 pb-2">
             {matrixList1.map((val, idx) => (
@@ -62,7 +69,14 @@ function EisenhowerMatrix() {
             Decide
           </Text>
           <form onSubmit={(e) => handleTwo(e)}>
-            <TextInput required ref={ref2} ml="0.5rem" my={"xs"} w={"90%"} />
+            <TextInput
+              placeholder="Type task here.."
+              required
+              ref={ref2}
+              ml="0.5rem"
+              my={"xs"}
+              w={"90%"}
+            />
           </form>
           <ul className="my-0 px-7 pb-2">
             {matrixList2.map((val, idx) => (
@@ -80,7 +94,14 @@ function EisenhowerMatrix() {
             Delegate
           </Text>
           <form onSubmit={(e) => handleThree(e)}>
-            <TextInput required ref={ref3} ml="0.5rem" my={"xs"} w={"90%"} />
+            <TextInput
+              placeholder="Type task here.."
+              required
+              ref={ref3}
+              ml="0.5rem"
+              my={"xs"}
+              w={"90%"}
+            />
           </form>
           <ul className="my-0 px-7 pb-2">
             {matrixList3.map((val, idx) => (
@@ -99,7 +120,14 @@ function EisenhowerMatrix() {
             Delete
           </Text>
           <form onSubmit={(e) => handleFour(e)}>
-            <TextInput required ref={ref4} ml="0.5rem" my={"xs"} w={"90%"} />
+            <TextInput
+              placeholder="Type task here.."
+              required
+              ref={ref4}
+              ml="0.5rem"
+              my={"xs"}
+              w={"90%"}
+            />
           </form>
           <ul className="my-0 px-7 pb-2">
             {matrixList4.map((val, idx) => (
