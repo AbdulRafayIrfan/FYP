@@ -20,17 +20,17 @@ function EisenhowerMatrix() {
   function handleTwo(e) {
     e.preventDefault();
     setMatrixList2([...matrixList2, ref2.current.value]);
-    ref1.current.value = "";
+    ref2.current.value = "";
   }
   function handleThree(e) {
     e.preventDefault();
     setMatrixList3([...matrixList3, ref3.current.value]);
-    ref1.current.value = "";
+    ref3.current.value = "";
   }
   function handleFour(e) {
     e.preventDefault();
     setMatrixList4([...matrixList4, ref4.current.value]);
-    ref1.current.value = "";
+    ref4.current.value = "";
   }
 
   return (
