@@ -44,20 +44,26 @@ function Login() {
       router.push("/home");
     } catch (error) {
       const errorCode = error.code;
-      notifications.show({
-        title: errorCode,
-        color: "red",
-        icon: <ExclamationCircleIcon />,
-        styles: {
-          title: {
+      switch (errorCode) {
+        case "auth/invalid-email":
+        case "auth/wrong-password":
+        case "auth/user-not-found": {
+          notifications.show({
+            title: "Wrong Email/Password.",
             color: "red",
-            textTransform: "uppercase",
-            fontWeight: "bold",
-            fontSize: "1rem",
-          },
-          icon: { width: "1.25rem", height: "1.25rem" },
-        },
-      });
+            icon: <ExclamationCircleIcon />,
+            styles: {
+              title: {
+                color: "red",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                fontSize: "1rem",
+              },
+              icon: { width: "1.25rem", height: "1.25rem" },
+            },
+          });
+        }
+      }
     }
 
     setLoading(false);

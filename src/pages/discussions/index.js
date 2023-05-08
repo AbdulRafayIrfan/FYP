@@ -30,7 +30,7 @@ function Discussions() {
           {!showForm ? (
             <>
               <CreateDiscussion showForm={setShowForm} />
-              <QueryDiscussion />
+              {/* <QueryDiscussion /> */}
               <DiscussionList />
             </>
           ) : (

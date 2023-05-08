@@ -167,9 +167,25 @@ export default function Navbar() {
 
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
-            <Paper className={classes.dropdown} withBorder style={styles}>
-              {items}
-            </Paper>
+            <>
+              <Paper
+                sx={{ zIndex: "1" }}
+                className={classes.dropdown}
+                withBorder
+                style={styles}
+              >
+                {items}
+                <Menu>
+                  <Menu.Divider />
+                  <Menu.Item
+                    onClick={handleLogout}
+                    icon={<ArrowLeftOnRectangleIcon className="h-4 w-4" />}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu>
+              </Paper>
+            </>
           )}
         </Transition>
 
@@ -205,9 +221,6 @@ export default function Navbar() {
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Label>Settings</Menu.Label>
-            <Menu.Item icon={<Cog8ToothIcon className="h-4 w-4" />}>
-              Account settings
-            </Menu.Item>
             <Menu.Item
               onClick={handleLogout}
               icon={<ArrowLeftOnRectangleIcon className="h-4 w-4" />}
