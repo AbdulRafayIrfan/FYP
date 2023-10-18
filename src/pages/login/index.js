@@ -90,6 +90,10 @@ function Login() {
               style={{ cursor: "pointer" }}
             />
           </header>
+          <Text color="white" size="10px" align="center">
+            Email: a.Irfan@bub.edu.bh / Pass: 12345678
+          </Text>
+          {/* Form */}
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput
               required
