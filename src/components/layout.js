@@ -3,11 +3,11 @@ import Navbar from "./navbar";
 
 function Layout({ children }) {
   return (
-    <main className="bg-primary h-max">
+    <div className="flex flex-col min-h-screen bg-primary">
       <Navbar />
-      <section id="content">{children}</section>
+      <main id="content" className="flex-grow">{children}</main>
       <Footer />
-    </main>
+    </div>
   );
 }
 

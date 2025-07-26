@@ -7,6 +7,7 @@ import {
   PasswordInput,
   Anchor,
   Text,
+  Loader,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Head from "next/head";
@@ -22,7 +23,7 @@ function Login() {
 
   const { login } = useAuth();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({state: false, type: ""});
 
   // Defining form's initial values
   const form = useForm({
@@ -32,10 +33,36 @@ function Login() {
     },
   });
 
+  // Guest login
+  const handleGuestLogin = async () => {
+    try {
+      setLoading({state: true, type: "guest"});
+      await login(process.env.NEXT_PUBLIC_GUEST_EMAIL, process.env.NEXT_PUBLIC_GUEST_PASSWORD);
+      form.reset();
+      router.push("/home");
+    } catch (error) {
+      notifications.show({
+            title: "An error occured, please try again",
+            color: "red",
+            icon: <ExclamationCircleIcon />,
+            styles: {
+              title: {
+                color: "red",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                fontSize: "1rem",
+              },
+              icon: { width: "1.25rem", height: "1.25rem" },
+            },
+          });
+    }
+    setLoading({state: false, type: ""});
+  }
+
   // Form submit function
   const handleSubmit = async () => {
     try {
-      setLoading(true);
+      setLoading({state: true, type: "user"});
       await login(form.values.email, form.values.password);
       form.reset();
       // Direct user to home upon successful log-in,
@@ -66,7 +93,7 @@ function Login() {
       }
     }
 
-    setLoading(false);
+    setLoading({state: false, type: ""});
   };
 
   return (
@@ -90,9 +117,6 @@ function Login() {
               style={{ cursor: "pointer" }}
             />
           </header>
-          <Text color="white" size="10px" align="center">
-            Email: a.Irfan@bub.edu.bh / Pass: 12345678
-          </Text>
           {/* Form */}
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput
@@ -117,15 +141,6 @@ function Login() {
               >
                 Password *
               </Text>
-
-              <Anchor
-                color="gray.0"
-                size="xs"
-                onClick={(event) => event.preventDefault()}
-                sx={{ fontWeight: "500" }}
-              >
-                Forgot your password?
-              </Anchor>
             </Group>
 
             <PasswordInput
@@ -139,19 +154,23 @@ function Login() {
             />
 
             <Group position="apart" mt="lg">
-              <Anchor
-                color="gray.0"
-                component="button"
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push("/register");
-                }}
-                size="sm"
-              >
-                {`Don't have an account? Register`}
-              </Anchor>
-              {loading ? (
+              {loading.state && loading.type == "guest" ? (
+                <Button
+                  loading
+                  loaderPosition="center"
+                  variant="gradient"
+                >
+                  Try as Guest
+                </Button>
+              ) : (
+                 <Button
+                  onClick={handleGuestLogin}
+                  variant="gradient">
+                  Try as Guest
+                </Button>
+              )
+            }
+              {loading.state && loading.type == "user" ? (
                 <Button
                   loading
                   loaderPosition="center"

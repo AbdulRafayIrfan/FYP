@@ -10,8 +10,12 @@ import StageThree from "@/components/setup_stages/stageThree";
 function SetupProfile() {
   const [stage, setStage] = useState({ name: "Verify Email", num: 1 });
   const [emailVerified, setEmailVerified] = useState(false);
-  const { loading, currentUser, verifyEmail } = useAuth();
+  const { loading, currentUser, verifyEmail, logout } = useAuth();
   const router = useRouter();
+
+  const handleBack = () => {
+    router.push("/login").then((val) => val && logout());
+  }
 
   useEffect(() => {
     let timeoutId;
@@ -65,7 +69,7 @@ function SetupProfile() {
             </Text>
             <Loader mt="lg" color="gray.0" size="lg" />
             <section className="w-full mt-5 flex justify-between">
-              <PrevChevronBtn onClick={() => router.push("/login")} />
+              <PrevChevronBtn onClick={handleBack} />
             </section>
           </>
         );
