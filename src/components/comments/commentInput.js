@@ -11,7 +11,7 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
 
-function CommentInput({ focus }) {
+function CommentInput({ focus, updateCommentList }) {
   const router = useRouter();
   const discussionId = router.query.discussionId;
   const [loading, setLoading] = useState(false);
@@ -92,9 +92,9 @@ function CommentInput({ focus }) {
               },
             },
           });
-          setLoading(false);
-          // Reload page, to let user see their comment
-          router.reload();
+          form.reset();
+          // Fetch comments list again with newly added comment
+          updateCommentList();
         })
         .catch((error) => console.error(error));
     } else {
@@ -117,8 +117,8 @@ function CommentInput({ focus }) {
           },
         },
       });
-      
     }
+    setLoading(false);
   }
 
   // Focus input field

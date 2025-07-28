@@ -81,26 +81,26 @@ function DiscussionPost({ data, discussionId }) {
     }
   }, [currentUser, data]);
 
+  function updateLikeButton() {
+    if (toggleLike) {
+      setLikes(prev => prev - 1);
+    } else {
+      setLikes(prev => prev + 1);
+    }
+    setToggleLike(prev => !prev);
+  }
+
   function handleLike(e) {
-    // Disable button as the button would be changing after update from db
-    setLikeBtnChanging(true);
     e.stopPropagation();
+
+    // Eager / Optimistic UI Changes 
+    updateLikeButton();
 
     // Check what previous state was and accordingly make changes in firestore
     toggleLikePost(toggleLike, discussionId, currentUser.uid)
-      .then((val) => {
-        // After firestore has been updated
-        // Update like state variable to newly returned one
-        setLikes(val);
-
-        // Update thumbs up icon
-        setToggleLike((prevState) => !prevState);
-
-        // Enable button again
-        setLikeBtnChanging(false);
-      })
       .catch((error) => {
         console.error(error);
+        updateLikeButton();
       });
   }
 
@@ -126,7 +126,7 @@ function DiscussionPost({ data, discussionId }) {
         <Center>
           <Avatar src={data.photoURL} size={24} radius="xl" mr="xs" />
           <Text fz="sm" inline>
-            {data.displayName}
+            {data.displayName ?? "Guest"}
           </Text>
           <Text
             ml="xs"

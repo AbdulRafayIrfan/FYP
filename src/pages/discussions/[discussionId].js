@@ -81,7 +81,6 @@ function DiscussionDetail() {
   const { currentUser } = useAuth();
   const [toggleLike, setToggleLike] = useState(false);
   const [likes, setLikes] = useState(0);
-  const [likeBtnChanging, setLikeBtnChanging] = useState(false);
 
   // State variable to set focus on comment input
   const [focus, setFocus] = useState(false);
@@ -118,25 +117,33 @@ function DiscussionDetail() {
     }
   }, [currentUser, data]);
 
+  async function fetchComments() {
+    const discussionData = await getDiscussionDetails(discussionId);
+    if (discussionData) {
+      setData(discussionData);
+    } else {
+      console.log("Failed to fetch document details");
+    }
+  }
+
+  function updateLikeButton() {
+    if (toggleLike) {
+      setLikes(prev => prev - 1);
+    } else {
+      setLikes(prev => prev + 1);
+    }
+    setToggleLike(prev => !prev);
+  }
+
   function handleLike(e) {
-    setLikeBtnChanging(true);
     e.stopPropagation();
+    updateLikeButton();
 
     // Check what previous state was and accordingly make changes in firestore
     toggleLikePost(toggleLike, discussionId, currentUser.uid)
-      .then((val) => {
-        // After firestore has been updated
-        // Update like state variable to newly returned one
-        setLikes(val);
-
-        // Update thumbs up icon
-        setToggleLike((prevState) => !prevState);
-
-        // Enable button again
-        setLikeBtnChanging(false);
-      })
       .catch((error) => {
         console.error(error);
+        updateLikeButton();
       });
   }
 
@@ -213,7 +220,6 @@ function DiscussionDetail() {
                     <Group spacing={8} mr={0}>
                       <ActionIcon
                         onClick={(e) => handleLike(e)}
-                        disabled={likeBtnChanging}
                         className={classes.action}
                       >
                         {toggleLike ? (
@@ -234,7 +240,7 @@ function DiscussionDetail() {
                   </Group>
                 </Card>
                 {/* Comment Section here with input and list of comments*/}
-                <CommentInput focus={focus} />
+                <CommentInput focus={focus} updateCommentList={fetchComments} />
                 <CommentList commentsArray={data.comments} />
               </>
             )}

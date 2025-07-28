@@ -15,14 +15,14 @@ export default function Index() {
       return;
     }
 
-    // Redirect unverified user to setup-profile page
-    if (!loading && !currentUser.emailVerified) {
+    // Redirect unverified non-anonymous user to setup-profile page
+    if (!loading && !currentUser.isAnonymous && !currentUser.emailVerified) {
       router.push("/setup-profile");
       return;
     }
 
     // Redirect verified user to home page
-    if (!loading && currentUser.emailVerified) {
+    if (!loading && (currentUser.isAnonymous || currentUser.emailVerified)) {
       router.push("/home");
       return;
     }
