@@ -7,10 +7,11 @@ export default async function handler(req, res) {
   }
 
   const { title, content } = req.body;
+  const apiKey = process.env.RAPID_API_KEY;
 
   try {
     console.log(title, content);
-    const cleanedData = await moderateContent(title, content);
+    const cleanedData = await moderateContent(title, content, apiKey);
     res.status(200).json({ cleanedData });
   } catch (error) {
     console.error(error.message);

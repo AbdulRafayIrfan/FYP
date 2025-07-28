@@ -14,8 +14,8 @@ export function protectedPage(Component) {
         router.replace("/login");
         return;
       }
-      // User has registered but email unverified
-      if (!loading && !currentUser.emailVerified) {
+      // Non-anonymous User has registered but email unverified
+      if (!loading && !currentUser.isAnonymous && !currentUser.emailVerified) {
         router.replace("/setup-profile");
         return;
       }
@@ -29,8 +29,8 @@ export function protectedPage(Component) {
         </div>
       );
 
-    // Only display private page component if email is verified
-    if (currentUser && currentUser.emailVerified)
+    // Only display private page component if email is verified or is an anonymous user
+    if (currentUser && (currentUser.isAnonymous || currentUser.emailVerified))
       return <Component {...props} />;
   };
 }

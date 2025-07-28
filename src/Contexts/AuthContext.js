@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
   sendEmailVerification,
+  signInAnonymously
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -28,6 +29,11 @@ export function AuthProvider({ children }) {
   // Login Function
   function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
+  }
+
+  // Anonymous / Guest Login Function
+  function anonymousLogin() {
+    return signInAnonymously(auth);
   }
 
   // Logout Function
@@ -66,6 +72,7 @@ export function AuthProvider({ children }) {
     currentUser,
     register,
     login,
+    anonymousLogin,
     logout,
     verifyEmail,
     loading,

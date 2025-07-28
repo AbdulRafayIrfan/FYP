@@ -1,4 +1,8 @@
-export async function moderateContent(titleText, contentText) {
+if (typeof window !== "undefined") {
+  throw new Error("Server Access Only!");
+}
+
+export async function moderateContent(titleText, contentText, apiKey) {
   function checkForShouting(text) {
     const shoutRegex = /[A-Z]{5,}/g;
     const hasExcessiveShouting = shoutRegex.test(text);
@@ -28,7 +32,7 @@ export async function moderateContent(titleText, contentText) {
       method: "GET",
       headers: {
         "content-type": "application/octet-stream",
-        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
+        "X-RapidAPI-Key": apiKey,
         "X-RapidAPI-Host": "community-purgomalum.p.rapidapi.com",
       },
     };
@@ -57,7 +61,7 @@ export async function moderateContent(titleText, contentText) {
       method: "GET",
       headers: {
         "content-type": "application/octet-stream",
-        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
+        "X-RapidAPI-Key": apiKey,
         "X-RapidAPI-Host": "community-purgomalum.p.rapidapi.com",
       },
     };

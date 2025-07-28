@@ -21,7 +21,7 @@ import { notifications } from "@mantine/notifications";
 function Login() {
   const router = useRouter();
 
-  const { login } = useAuth();
+  const { login, anonymousLogin } = useAuth();
 
   const [loading, setLoading] = useState({state: false, type: ""});
 
@@ -37,7 +37,7 @@ function Login() {
   const handleGuestLogin = async () => {
     try {
       setLoading({state: true, type: "guest"});
-      await login(process.env.NEXT_PUBLIC_GUEST_EMAIL, process.env.NEXT_PUBLIC_GUEST_PASSWORD);
+      await anonymousLogin();
       form.reset();
       router.push("/home");
     } catch (error) {
