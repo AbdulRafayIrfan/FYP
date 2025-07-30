@@ -31,10 +31,6 @@ function StageThree() {
   const router = useRouter();
 
   useEffect(() => {
-    // if (file) {
-    //   console.log(file);
-    // }
-
     function getExtension(filename) {
       let parts = filename.split(".");
       return parts[parts.length - 1];
@@ -104,7 +100,6 @@ function StageThree() {
       const fileRef = ref(storage, currentUser.uid + "." + currentFileExt);
 
       uploadBytes(fileRef, file).then((snapshot) => {
-        console.log("Uploaded file image");
         // Display uploaded image in Avatar before continuing
         getDownloadURL(fileRef).then((url) => {
           // Update profile of user to include uploaded photo
@@ -127,7 +122,6 @@ function StageThree() {
 
     const isPhotoURLChanged = () => {
       currentUser.reload().then(() => {
-        console.log("Reloaded...");
         setPhotoURL(currentUser.photoURL);
         timeoutId = setTimeout(isPhotoURLChanged, 5000);
       });

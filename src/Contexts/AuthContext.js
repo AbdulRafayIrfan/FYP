@@ -43,7 +43,6 @@ export function AuthProvider({ children }) {
 
   // Verify Email Function
   function verifyEmail() {
-    console.log("Verification sent to:", currentUser.email);
     return sendEmailVerification(currentUser);
   }
 

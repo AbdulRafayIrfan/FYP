@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Layout from "@/components/layout";
@@ -89,6 +89,7 @@ function DiscussionDetail() {
     // Method to fetch data asynchronously
     // When discussion id is set
     async function fetchData(id) {
+      console.log("Fetching data...");
       const discussionData = await getDiscussionDetails(id);
 
       if (discussionData) {
@@ -128,23 +129,23 @@ function DiscussionDetail() {
 
   function updateLikeButton() {
     if (toggleLike) {
-      setLikes(prev => prev - 1);
+      setLikes((prev) => prev - 1);
     } else {
-      setLikes(prev => prev + 1);
+      setLikes((prev) => prev + 1);
     }
-    setToggleLike(prev => !prev);
+    setToggleLike((prev) => !prev);
   }
 
   function handleLike(e) {
     e.stopPropagation();
+    let prevState = toggleLike;
     updateLikeButton();
 
     // Check what previous state was and accordingly make changes in firestore
-    toggleLikePost(toggleLike, discussionId, currentUser.uid)
-      .catch((error) => {
-        console.error(error);
-        updateLikeButton();
-      });
+    toggleLikePost(prevState, discussionId, currentUser.uid).catch((error) => {
+      console.error(error);
+      updateLikeButton();
+    });
   }
 
   return (
@@ -231,7 +232,7 @@ function DiscussionDetail() {
                       </ActionIcon>
                       <ActionIcon
                         className={classes.action}
-                        onClick={() => setFocus(true)}
+                        onClick={() => setFocus((prev) => !prev)}
                       >
                         <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary mr-1" />
                         <Text fz="xs">{data.comments.length}</Text>

@@ -61,7 +61,6 @@ function Comment({ commentData, commentIndex }) {
   // Linking Functionality
   const [toggleLike, setToggleLike] = useState(false);
   const [likes, setLikes] = useState(0);
-  const [likeBtnChanging, setLikeBtnChanging] = useState(false);
 
   useEffect(() => {
     setLikes(commentData.likes.length);
@@ -75,23 +74,28 @@ function Comment({ commentData, commentIndex }) {
     setRepliesOpen((prevState) => !prevState);
   }
 
+  function updateLikeButton() {
+    if (toggleLike) {
+      setLikes((prev) => prev - 1);
+    } else {
+      setLikes((prev) => prev + 1);
+    }
+    setToggleLike((prev) => !prev);
+  }
+
   function handleLike() {
-    setLikeBtnChanging(true);
+    updateLikeButton();
 
     // Check what previous state was and accordingly make changes in firestore
-    toggleLikeComment(toggleLike, discussionId, currentUser.uid, commentIndex)
-      .then((val) => {
-        setLikes(val);
-
-        // Update thumbs up icon
-        setToggleLike((prevState) => !prevState);
-
-        // Enable button again
-        setLikeBtnChanging(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    toggleLikeComment(
+      toggleLike,
+      discussionId,
+      currentUser.uid,
+      commentIndex
+    ).catch((error) => {
+      console.error(error);
+      updateLikeButton();
+    });
   }
 
   // Function to toggle the reply input component
@@ -104,7 +108,7 @@ function Comment({ commentData, commentIndex }) {
       <div className="bg-white rounded my-4 p-3 border border-[#E9ECEF]">
         <Group>
           <Avatar src={photoURL} alt={displayName} radius={"xl"}></Avatar>
-          <Text size={"sm"}>{displayName}</Text>
+          <Text size={"sm"}>{displayName ?? "Guest"}</Text>
           <Text size={"xs"} color="dimmed">
             {timeSince(postedAt)}
           </Text>
@@ -113,11 +117,7 @@ function Comment({ commentData, commentIndex }) {
           {comment}
         </Text>
         <Group mt="xs">
-          <ActionIcon
-            disabled={likeBtnChanging}
-            onClick={(e) => handleLike(e)}
-            className={classes.action}
-          >
+          <ActionIcon onClick={(e) => handleLike(e)} className={classes.action}>
             {toggleLike ? (
               <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
             ) : (
@@ -130,7 +130,10 @@ function Comment({ commentData, commentIndex }) {
           </ActionIcon>
         </Group>
         {showReplyInput && (
-          <ReplyInput replyingTo={displayName} commentIndex={commentIndex} />
+          <ReplyInput
+            replyingTo={displayName ?? "Guest"}
+            commentIndex={commentIndex}
+          />
         )}
         {/* Replies section */}
         {replies.length > 0 && (

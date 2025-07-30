@@ -22,14 +22,12 @@ function SetupProfile() {
 
     // Send email verification after loading is done for unverified user
     if (!loading && !currentUser.emailVerified) {
-      console.log("useEffect: email verification");
       verifyEmail();
     }
 
     // Check for when email is verified
     const isEmailVerified = () => {
       currentUser.reload().then(() => {
-        console.log("Reloaded....");
         setEmailVerified(currentUser.emailVerified);
         timeoutId = setTimeout(isEmailVerified, 5000);
       });

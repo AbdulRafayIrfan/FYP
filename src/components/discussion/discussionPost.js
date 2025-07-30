@@ -92,12 +92,13 @@ function DiscussionPost({ data, discussionId }) {
 
   function handleLike(e) {
     e.stopPropagation();
+    let prevState = toggleLike;
 
     // Eager / Optimistic UI Changes 
     updateLikeButton();
 
     // Check what previous state was and accordingly make changes in firestore
-    toggleLikePost(toggleLike, discussionId, currentUser.uid)
+    toggleLikePost(prevState, discussionId, currentUser.uid)
       .catch((error) => {
         console.error(error);
         updateLikeButton();

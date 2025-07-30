@@ -23,7 +23,6 @@ export async function moderateContent(titleText, contentText, apiKey) {
   if (contentText !== undefined) {
     const cleanedContent = checkForShouting(contentText);
 
-    console.log("It's a post!");
     // Rapid API (PurgoMalum) to detect profanity
     const url = `https://community-purgomalum.p.rapidapi.com/containsprofanity?text=${
       cleanedTitle + " " + cleanedContent

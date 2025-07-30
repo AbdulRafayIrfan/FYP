@@ -1,5 +1,5 @@
 import { Textarea, Button } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "@mantine/form";
 import { Timestamp, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/Contexts/AuthContext";
@@ -16,7 +16,7 @@ function ReplyInput({ replyingTo, commentIndex }) {
   const router = useRouter();
   const discussionId = router.query.discussionId;
   const [loading, setLoading] = useState(false);
-
+  const inputRef = useRef(null);
   const { currentUser } = useAuth();
 
   // Reference to the current document in firestore
@@ -120,11 +120,22 @@ function ReplyInput({ replyingTo, commentIndex }) {
     }
   }
 
+  // Focus and move cursor manually on mount
+  useEffect(() => {
+    if (inputRef.current) {
+      const input = inputRef.current;
+      input.focus();
+
+      const length = input.value.length;
+      input.setSelectionRange(length, length);
+    }
+  }, []);
+
   return (
     <section id="reply-input" className="mt-4 text-right">
       <form className="inline-block w-[95%]" onSubmit={(e) => handleSubmit(e)}>
         <Textarea
-          autoFocus
+          ref={inputRef}
           required
           {...form.getInputProps("replyInput")}
           placeholder=""
