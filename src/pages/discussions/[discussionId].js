@@ -19,9 +19,16 @@ import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import {
   HandThumbUpIcon as HandThumbUpOutlineIcon,
   ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextOutlineIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
-import { getDiscussionDetails } from "@/misc/firestoreQueries";
-import { ChevronLeftIcon } from "@heroicons/react/20/solid";
+import {
+  getDiscussionDetails,
+  deleteDiscussion,
+} from "@/misc/firestoreQueries";
+import {
+  ChevronLeftIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/20/solid";
 import { timeSince, checkLiked } from "@/misc/misc";
 import CommentInput from "@/components/comments/commentInput";
 import CommentList from "@/components/comments/commentList";
@@ -148,107 +155,131 @@ function DiscussionDetail() {
     });
   }
 
+  async function handleDelete(e) {
+    e.stopPropagation();
+    try {
+      await deleteDiscussion(discussionId);
+    } catch (error) {
+      notifications.show({
+        title: `${error}`,
+        color: "red",
+        icon: <ExclamationCircleIcon />,
+        autoClose: 3000,
+        styles: {
+          title: {
+            color: "red",
+            textTransform: "uppercase",
+            fontWeight: "bold",
+            fontWeight: "1rem",
+          },
+          icon: {
+            width: "1.25rem",
+            height: "1.25rem",
+          },
+        },
+      });
+      return;
+    }
+    router.push("/discussions?deletedPost");
+  }
+
   return (
-    <>
-      <Head>
-        <title>{/* Can add title of post here */}</title>
-      </Head>
-      <Layout>
-        <Container
-          size="md"
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "minmax(320px, 576px)",
-            justifyItems: "center",
-            justifyContent: "center",
-            padding: 0,
-          }}
-        >
-          <section className="inline-block w-full">
-            {!data ? (
-              <div className="text-center mt-2">
-                <Loader color="red" size="lg" />
-              </div>
-            ) : (
-              <>
-                <Button
-                  mt="sm"
-                  mb={"lg"}
-                  leftIcon={<ChevronLeftIcon className="h-4 w-4" />}
-                  variant=""
-                  color="gray.0"
-                  onClick={() => {
-                    router.push("/discussions");
-                  }}
-                >
-                  Back
-                </Button>
-                <Card
-                  withBorder
-                  radius="sm"
-                  mb="md"
-                  className={cx(classes.card)}
-                >
-                  <Text className={classes.title} fw={500} component="a">
+    <Layout>
+      <Container
+        size="md"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "minmax(320px, 576px)",
+          justifyItems: "center",
+          justifyContent: "center",
+          padding: 0,
+        }}
+      >
+        <section className="inline-block w-full">
+          {!data ? (
+            <div className="text-center mt-2">
+              <Loader color="red" size="lg" />
+            </div>
+          ) : (
+            <>
+              <Button
+                mt="sm"
+                mb={"lg"}
+                leftIcon={<ChevronLeftIcon className="h-4 w-4" />}
+                variant=""
+                color="gray.0"
+                onClick={() => {
+                  router.push("/discussions");
+                }}
+              >
+                Back
+              </Button>
+              <Card withBorder radius="sm" mb="md" className={cx(classes.card)}>
+                <Group position="apart">
+                  <Text fw={500} component="a">
                     {data.title}
                   </Text>
+                  <ActionIcon
+                    className={classes.action}
+                    onClick={(e) => handleDelete(e)}
+                  >
+                    <TrashIcon className="h-4 w-4 text-secondary mr-1" />
+                  </ActionIcon>
+                </Group>
 
-                  <Text fz="sm" color="dimmed" lineClamp={4}>
-                    {data.content}
-                  </Text>
+                <Text fz="sm" color="dimmed" lineClamp={4}>
+                  {data.content}
+                </Text>
 
-                  <Group position="apart" className={classes.footer}>
-                    <Center>
-                      <Avatar
-                        src={data.photoURL}
-                        size={24}
-                        radius="xl"
-                        mr="xs"
-                      />
-                      <Text fz="sm" inline>
-                        {data.displayName}
-                      </Text>
-                      <Text
-                        ml="xs"
-                        tt="uppercase"
-                        color="dimmed"
-                        sx={{ fontSize: "0.65rem", marginTop: "0.3rem" }}
-                      >
-                        Posted {timeSince(data.postedAt)}
-                      </Text>
-                    </Center>
+                <Group position="apart" className={classes.footer}>
+                  <Center>
+                    <Avatar src={data.photoURL} size={24} radius="xl" mr="xs" />
+                    <Text fz="sm" inline>
+                      {data.displayName}
+                    </Text>
+                    <Text
+                      ml="xs"
+                      tt="uppercase"
+                      color="dimmed"
+                      sx={{ fontSize: "0.65rem", marginTop: "0.3rem" }}
+                    >
+                      Posted {timeSince(data.postedAt)}
+                    </Text>
+                  </Center>
 
-                    <Group spacing={8} mr={0}>
-                      <ActionIcon
-                        onClick={(e) => handleLike(e)}
-                        className={classes.action}
-                      >
-                        {toggleLike ? (
-                          <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
-                        ) : (
-                          <HandThumbUpOutlineIcon className="h-4 w-4 text-secondary mr-1" />
-                        )}
-                        <Text fz="xs">{likes}</Text>
-                      </ActionIcon>
-                      <ActionIcon
-                        className={classes.action}
-                        onClick={() => setFocus((prev) => !prev)}
-                      >
-                        <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary mr-1" />
-                        <Text fz="xs">{data.comments.length}</Text>
-                      </ActionIcon>
-                    </Group>
+                  <Group spacing={8} mr={0}>
+                    <ActionIcon
+                      onClick={(e) => handleLike(e)}
+                      className={classes.action}
+                    >
+                      {toggleLike ? (
+                        <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
+                      ) : (
+                        <HandThumbUpOutlineIcon className="h-4 w-4 text-secondary mr-1" />
+                      )}
+                      <Text fz="xs">{likes}</Text>
+                    </ActionIcon>
+                    <ActionIcon
+                      className={classes.action}
+                      onClick={() => setFocus((prev) => !prev)}
+                    >
+                      <ChatBubbleBottomCenterTextOutlineIcon className="h-4 w-4 text-secondary mr-1" />
+                      <Text fz="xs">{data.comments.length}</Text>
+                    </ActionIcon>
                   </Group>
-                </Card>
-                {/* Comment Section here with input and list of comments*/}
-                <CommentInput focus={focus} updateCommentList={fetchComments} />
-                <CommentList commentsArray={data.comments} />
-              </>
-            )}
-          </section>
-        </Container>
-      </Layout>
-    </>
+                </Group>
+              </Card>
+              {/* Comment Section here with input and list of comments*/}
+              <CommentInput focus={focus} updateCommentList={fetchComments} />
+              <CommentList
+                commentsArray={data.comments}
+                updateCommentList={fetchComments}
+              />
+            </>
+          )}
+        </section>
+      </Container>
+    </Layout>
   );
 }
 

@@ -45,7 +45,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Comment({ commentData, commentIndex }) {
+function Comment({ commentData, commentIndex, updateCommentList }) {
   // Get discussion id from url
   const router = useRouter();
   const discussionId = router.query.discussionId;
@@ -133,6 +133,9 @@ function Comment({ commentData, commentIndex }) {
           <ReplyInput
             replyingTo={displayName ?? "Guest"}
             commentIndex={commentIndex}
+            toggleInput={toggleReplyInput}
+            openReplies={toggleReplies}
+            updateCommentList={updateCommentList}
           />
         )}
         {/* Replies section */}

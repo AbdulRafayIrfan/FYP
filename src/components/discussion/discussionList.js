@@ -3,14 +3,37 @@ import { useEffect, useState } from "react";
 import { db } from "../../../firebase";
 import DiscussionPost from "./discussionPost";
 import { Loader } from "@mantine/core";
+import { useRouter } from "next/router";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { notifications } from "@mantine/notifications";
 
 function DiscussionList() {
   const [discussionList, setDiscussionList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const deletedFlag = router.query.deletedPost;
 
   useEffect(() => {
     getDiscussions();
-  }, []);
+
+    if (deletedFlag !== undefined) {
+      notifications.show({
+        title: "Successfully deleted the post!",
+        color: "green",
+        autoClose: 2000,
+        icon: <CheckCircleIcon />,
+        styles: {
+          title: {
+            color: "green",
+            textTransform: "uppercase",
+            fontWeight: "bold",
+            fontSize: "1rem",
+          },
+        },
+      });
+    }
+  }, [deletedFlag]);
 
   function getDiscussions() {
     const globalDiscussions = collection(
@@ -47,6 +70,7 @@ function DiscussionList() {
           key={discussion.id}
           data={discussion.data}
           discussionId={discussion.id}
+          fetchDiscussions={getDiscussions}
         />
       ))
     ) : (

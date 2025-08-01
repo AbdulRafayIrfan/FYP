@@ -4,21 +4,21 @@ import {
   doc,
   getDoc,
   updateDoc,
-  FieldPath,
+  deleteDoc,
 } from "firebase/firestore";
 
 // different discussions lists
 const globalDiscussions = collection(db, "discussions/global/discussionList");
-const ictDiscussions = collection(db, "discussions/ict/discussionList");
-const businessDiscussions = collection(
-  db,
-  "discussions/business/discussionList"
-);
-const artDiscussions = collection(db, "discussions/arts/discussionList");
-const postgradDiscussions = collection(
-  db,
-  "discussions/postgraduate/discussionList"
-);
+// const ictDiscussions = collection(db, "discussions/ict/discussionList");
+// const businessDiscussions = collection(
+//   db,
+//   "discussions/business/discussionList"
+// );
+// const artDiscussions = collection(db, "discussions/arts/discussionList");
+// const postgradDiscussions = collection(
+//   db,
+//   "discussions/postgraduate/discussionList"
+// );
 
 // Get data of a discussion document from the ID
 export async function getDiscussionDetails(discussionId) {
@@ -166,4 +166,16 @@ export async function toggleLikeReply(
         reject(error);
       });
   });
+}
+
+export async function deleteDiscussion(discussionId) {
+  const discussionRef = doc(globalDiscussions, discussionId);
+  const discussionSnap = await getDoc(discussionRef);
+
+  if (!discussionSnap.exists()) {
+    throw new Error(`Discussion with id: ${discussionId} does not exist!`);
+  }
+
+  const response = await deleteDoc(discussionRef);
+  return response;
 }

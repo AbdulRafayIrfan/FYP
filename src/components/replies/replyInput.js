@@ -12,7 +12,13 @@ import {
 } from "@heroicons/react/24/solid";
 import { getDiscussionDetails } from "@/misc/firestoreQueries";
 
-function ReplyInput({ replyingTo, commentIndex }) {
+function ReplyInput({
+  replyingTo,
+  commentIndex,
+  toggleInput,
+  openReplies,
+  updateCommentList,
+}) {
   const router = useRouter();
   const discussionId = router.query.discussionId;
   const [loading, setLoading] = useState(false);
@@ -92,8 +98,9 @@ function ReplyInput({ replyingTo, commentIndex }) {
               },
             },
           });
-          setLoading(false);
-          router.reload();
+          toggleInput();
+          updateCommentList();
+          openReplies();
         })
         .catch((error) => console.error(error));
     } else {
@@ -116,8 +123,8 @@ function ReplyInput({ replyingTo, commentIndex }) {
           },
         },
       });
-      setLoading(false);
     }
+    setLoading(false);
   }
 
   // Focus and move cursor manually on mount

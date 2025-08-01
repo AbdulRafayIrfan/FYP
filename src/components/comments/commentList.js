@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Comment from "./comment";
 import { Transition } from "@mantine/core";
 
-function CommentList({ commentsArray }) {
+function CommentList({ commentsArray, updateCommentList }) {
   console.log("Comment list re-render!");
 
   const [prevLength, setPrevLength] = useState(commentsArray.length);
@@ -38,12 +38,22 @@ function CommentList({ commentsArray }) {
       >
         {(styles) => (
           <div style={styles}>
-            <Comment key={idx} commentData={comment} commentIndex={idx} />
+            <Comment
+              key={idx}
+              commentData={comment}
+              commentIndex={Math.abs(commentsArray.length - 1 - idx)}
+              updateCommentList={updateCommentList}
+            />
           </div>
         )}
       </Transition>
     ) : (
-      <Comment key={idx} commentData={comment} commentIndex={idx} />
+      <Comment
+        key={idx}
+        commentData={comment}
+        commentIndex={Math.abs(commentsArray.length - 1 - idx)}
+        updateCommentList={updateCommentList}
+      />
     );
   });
 }

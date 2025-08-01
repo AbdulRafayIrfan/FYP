@@ -86,7 +86,7 @@ function Reply({ replyData, commentIndex, replyIndex }) {
     <>
       <Group mt="sm">
         <Avatar src={photoURL} alt={displayName} radius={"xl"}></Avatar>
-        <Text size={"sm"}>{displayName}</Text>
+        <Text size={"sm"}>{displayName ?? "Guest"}</Text>
         <Text size={"xs"} color="dimmed">
           {timeSince(postedAt)}
         </Text>

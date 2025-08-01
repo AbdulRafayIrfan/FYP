@@ -13,11 +13,18 @@ import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import {
   HandThumbUpIcon as HandThumbUpOutlineIcon,
   ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextOutlineIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
-import { timeSince, checkLiked } from "@/misc/misc";
+import { timeSince, checkLiked, openDeleteModal } from "@/misc/misc";
 import { useAuth } from "@/Contexts/AuthContext";
-import { toggleLikePost } from "@/misc/firestoreQueries";
+import { toggleLikePost, deleteDiscussion } from "@/misc/firestoreQueries";
+import { modals } from "@mantine/modals";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/20/solid";
+import { notifications } from "@mantine/notifications";
 
 // Custom styles for Card component
 const useStyles = createStyles((theme) => ({
@@ -61,13 +68,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function DiscussionPost({ data, discussionId }) {
+function DiscussionPost({ data, discussionId, fetchDiscussions }) {
   const router = useRouter();
   const { classes, cx } = useStyles();
   const postedAt = timeSince(data.postedAt);
   const [toggleLike, setToggleLike] = useState(false);
   const [likes, setLikes] = useState(0);
-  const [likeBtnChanging, setLikeBtnChanging] = useState(false);
   const { currentUser } = useAuth();
 
   // Liking system
@@ -83,26 +89,84 @@ function DiscussionPost({ data, discussionId }) {
 
   function updateLikeButton() {
     if (toggleLike) {
-      setLikes(prev => prev - 1);
+      setLikes((prev) => prev - 1);
     } else {
-      setLikes(prev => prev + 1);
+      setLikes((prev) => prev + 1);
     }
-    setToggleLike(prev => !prev);
+    setToggleLike((prev) => !prev);
   }
 
   function handleLike(e) {
     e.stopPropagation();
     let prevState = toggleLike;
 
-    // Eager / Optimistic UI Changes 
+    // Eager / Optimistic UI Changes
     updateLikeButton();
 
     // Check what previous state was and accordingly make changes in firestore
-    toggleLikePost(prevState, discussionId, currentUser.uid)
-      .catch((error) => {
-        console.error(error);
-        updateLikeButton();
+    toggleLikePost(prevState, discussionId, currentUser.uid).catch((error) => {
+      console.error(error);
+      updateLikeButton();
+    });
+  }
+
+  async function deletePost() {
+    try {
+      await deleteDiscussion(discussionId);
+    } catch (error) {
+      notifications.show({
+        title: `${error}`,
+        color: "red",
+        icon: <ExclamationCircleIcon />,
+        autoClose: 3000,
+        styles: {
+          title: {
+            color: "red",
+            textTransform: "uppercase",
+            fontWeight: "bold",
+            fontWeight: "1rem",
+          },
+          icon: {
+            width: "1.25rem",
+            height: "1.25rem",
+          },
+        },
       });
+      return;
+    }
+
+    fetchDiscussions();
+    notifications.show({
+      title: "Successfully deleted the post!",
+      color: "green",
+      autoClose: 2000,
+      icon: <CheckCircleIcon />,
+      styles: {
+        title: {
+          color: "green",
+          textTransform: "uppercase",
+          fontWeight: "bold",
+          fontSize: "1rem",
+        },
+      },
+    });
+  }
+
+  function handleDelete(e) {
+    e.stopPropagation();
+    modals.openConfirmModal({
+      title: "Delete post",
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete this post? You won&apos;t be able to
+          revert this!
+        </Text>
+      ),
+      labels: { confirm: "Delete post", cancel: "No don't delete it" },
+      confirmProps: { color: "red" },
+      onConfirm: deletePost,
+    });
   }
 
   return (
@@ -115,9 +179,14 @@ function DiscussionPost({ data, discussionId }) {
       mb="md"
       className={cx(classes.card)}
     >
-      <Text className={classes.title} fw={500} component="a">
-        {data.title}
-      </Text>
+      <Group position="apart">
+        <Text fw={500} component="a">
+          {data.title}
+        </Text>
+        <ActionIcon className={classes.action} onClick={(e) => handleDelete(e)}>
+          <TrashIcon className="h-4 w-4 text-secondary mr-1" />
+        </ActionIcon>
+      </Group>
 
       <Text fz="sm" color="dimmed" lineClamp={4}>
         {data.content}
@@ -140,11 +209,7 @@ function DiscussionPost({ data, discussionId }) {
         </Center>
 
         <Group spacing={8} mr={0}>
-          <ActionIcon
-            disabled={likeBtnChanging}
-            onClick={(e) => handleLike(e)}
-            className={classes.action}
-          >
+          <ActionIcon onClick={(e) => handleLike(e)} className={classes.action}>
             {toggleLike ? (
               <HandThumbUpIcon className="h-4 w-4 text-secondary mr-1" />
             ) : (
