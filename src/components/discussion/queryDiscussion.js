@@ -6,7 +6,7 @@ import DiscussionGroupDropdown from "./discussionGroupDropdown";
 function QueryDiscussion() {
   return (
     <section className="border-[1px] bg-white border-solid box-border w-full min-w-[320px] border-[#E9ECEF] rounded-sm mb-2 p-1 flex justify-between">
-      <div>
+      {/* <div>
         <Button
           compact
           color="red"
@@ -22,7 +22,7 @@ function QueryDiscussion() {
         >
           Top Liked
         </Button>
-      </div>
+      </div> */}
       <DiscussionGroupDropdown />
     </section>
   );

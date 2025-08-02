@@ -141,7 +141,7 @@ export default function Navbar() {
   return (
     <Header
       height={HEADER_HEIGHT}
-      sx={{ backgroundColor: "#f8f9fa", border: "none", zIndex: "0" }}
+      sx={{ backgroundColor: "#f8f9fa", border: "none", zIndex: "10" }}
       mb="1.5rem"
     >
       <Container className={classes.header}>

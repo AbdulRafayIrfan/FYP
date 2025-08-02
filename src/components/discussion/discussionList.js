@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { notifications } from "@mantine/notifications";
 
-function DiscussionList() {
+function DiscussionList({ activeSort }) {
   const [discussionList, setDiscussionList] = useState([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -18,6 +18,7 @@ function DiscussionList() {
     getDiscussions();
 
     if (deletedFlag !== undefined) {
+      console.log(router.query);
       notifications.show({
         title: "Successfully deleted the post!",
         color: "green",
@@ -33,7 +34,7 @@ function DiscussionList() {
         },
       });
     }
-  }, [deletedFlag]);
+  }, [deletedFlag, router.query]);
 
   function getDiscussions() {
     const globalDiscussions = collection(
@@ -56,6 +57,14 @@ function DiscussionList() {
       });
   }
 
+  function sortFunc(a, b) {
+    if (activeSort == "Top") {
+      return b.data.likes.length - a.data.likes.length;
+    } else if (activeSort == "New") {
+      return b.data.postedAt.toMillis() - a.data.postedAt.toMillis();
+    }
+  }
+
   function renderDiscussions() {
     if (loading)
       return (
@@ -64,17 +73,40 @@ function DiscussionList() {
         </div>
       );
 
-    return discussionList.length > 0 ? (
-      discussionList.map((discussion) => (
-        <DiscussionPost
-          key={discussion.id}
-          data={discussion.data}
-          discussionId={discussion.id}
-          fetchDiscussions={getDiscussions}
-        />
-      ))
-    ) : (
-      <div>There are currently no discussions</div>
+    if (discussionList.length == 0) {
+      return <div>There are currently no discussions</div>;
+    }
+
+    if (activeSort == "") {
+      return (
+        <>
+          {discussionList.map((discussion) => (
+            <DiscussionPost
+              key={discussion.id}
+              data={discussion.data}
+              discussionId={discussion.id}
+              fetchDiscussions={getDiscussions}
+            />
+          ))}
+        </>
+      );
+    }
+
+    // discussionsList = [ {data: { likes: [], comments: [], postedAt: timeStamp }, id: 58} ]
+
+    return (
+      <>
+        {[...discussionList]
+          .sort((a, b) => sortFunc(a, b))
+          .map((discussion) => (
+            <DiscussionPost
+              key={discussion.id}
+              data={discussion.data}
+              discussionId={discussion.id}
+              fetchDiscussions={getDiscussions}
+            />
+          ))}
+      </>
     );
   }
 

@@ -219,12 +219,15 @@ function DiscussionDetail() {
                   <Text fw={500} component="a">
                     {data.title}
                   </Text>
-                  <ActionIcon
-                    className={classes.action}
-                    onClick={(e) => handleDelete(e)}
-                  >
-                    <TrashIcon className="h-4 w-4 text-secondary mr-1" />
-                  </ActionIcon>
+
+                  {currentUser.displayName == data.displayName && (
+                    <ActionIcon
+                      className={classes.action}
+                      onClick={(e) => handleDelete(e)}
+                    >
+                      <TrashIcon className="h-4 w-4 text-secondary mr-1" />
+                    </ActionIcon>
+                  )}
                 </Group>
 
                 <Text fz="sm" color="dimmed" lineClamp={4}>

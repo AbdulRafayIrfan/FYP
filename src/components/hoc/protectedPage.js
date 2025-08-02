@@ -24,7 +24,7 @@ export function protectedPage(Component) {
     // Loading animation here
     if (loading)
       return (
-        <div className="text-center mt-[50%] bg-secondary">
+        <div className="text-center mt-[50vh] bg-secondary">
           <Loader color="white" size="xl" />
         </div>
       );

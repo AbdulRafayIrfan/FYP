@@ -179,3 +179,7 @@ export async function deleteDiscussion(discussionId) {
   const response = await deleteDoc(discussionRef);
   return response;
 }
+
+function canDelete() {
+  //
+}

@@ -1,7 +1,8 @@
 import { Avatar, TextInput } from "@mantine/core";
 import { useAuth } from "@/Contexts/AuthContext";
+import DiscussionGroupDropdown from "./discussionGroupDropdown";
 
-function CreateDiscussion({ showForm }) {
+function CreateDiscussion({ showForm, activeSort, updateSort }) {
   const { currentUser } = useAuth();
 
   return (
@@ -22,6 +23,10 @@ function CreateDiscussion({ showForm }) {
         }}
         placeholder="Start a discussion..."
         onClick={() => showForm(true)}
+      />
+      <DiscussionGroupDropdown
+        activeSort={activeSort}
+        updateSort={updateSort}
       />
     </section>
   );
