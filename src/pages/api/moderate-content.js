@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   const { title, content } = req.body;
-  const apiKey = process.env.RAPID_API_KEY;
+  const apiKey = process.env.PURGO_RAPID_API_KEY;
 
   try {
     console.log(title, content);
