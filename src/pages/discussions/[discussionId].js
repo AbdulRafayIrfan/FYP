@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import Layout from "@/components/layout";
 import {
   Container,
@@ -34,6 +33,7 @@ import CommentInput from "@/components/comments/commentInput";
 import CommentList from "@/components/comments/commentList";
 import { useAuth } from "@/Contexts/AuthContext";
 import { toggleLikePost } from "@/misc/firestoreQueries";
+import { notifications } from "@mantine/notifications";
 
 // Custom styles for Card component
 const useStyles = createStyles((theme) => ({

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { db } from "../../firebase";
 import {
   collection,
@@ -178,8 +179,4 @@ export async function deleteDiscussion(discussionId) {
 
   const response = await deleteDoc(discussionRef);
   return response;
-}
-
-function canDelete() {
-  //
 }

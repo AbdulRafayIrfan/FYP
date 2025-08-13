@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { protectedPage } from "../../components/hoc/protectedPage";
 import { useRouter } from "next/router";
 import Layout from "../../components/layout";
@@ -7,45 +7,28 @@ import Head from "next/head";
 import { Carousel } from "@mantine/carousel";
 import Image from "next/image";
 import Link from "next/link";
+import { getPosts } from "@/misc/instagram";
 
-const events = [
-  {
-    id: 1,
-    title: "30 Days of Reciting Quran",
-    img: "/quran_100.png",
-    link: "https://www.instagram.com/p/CqFrk6KMtlb/",
-  },
-  {
-    id: 2,
-    title: "BUB's Ramadan Ghabga",
-    img: "/bub_ghabga.png",
-    link: "https://www.instagram.com/p/Cqpr6YQsPuR/",
-  },
-  {
-    id: 3,
-    title: "Bonfire Night",
-    img: "/bonfire.png",
-    link: "https://www.instagram.com/p/CpxNlJFs3NG/",
-  },
-  {
-    id: 4,
-    title: "BUB Sports Day",
-    img: "/bub_sports_day.png",
-    link: "https://www.instagram.com/p/CoFMzYfMSsU/",
-  },
-  {
-    id: 5,
-    title: "BUB F1 Booth",
-    img: "/bub_f1.png",
-    link: "https://www.instagram.com/p/CpdHbMFM-2L/",
-  },
-];
+export async function getStaticProps() {
+  const posts = await getPosts();
 
-function Home() {
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 60 * 60 * 24 * 7, // 7 days revalidation period
+  };
+}
+
+function Home({ posts }) {
   const router = useRouter();
 
   function handleClick(link) {
     router.replace(link);
+  }
+
+  function imageLoader({ src }) {
+    return src;
   }
 
   return (
@@ -63,16 +46,20 @@ function Home() {
             withIndicators
             style={{ marginTop: 50, marginBottom: 50 }}
           >
-            {events.map((event) => (
-              <Carousel.Slide key={event.id}>
-                <Link target="_blank" href={event.link}>
+            {posts.map((post) => (
+              <Carousel.Slide key={post.code}>
+                <Link
+                  target="_blank"
+                  href={`https://www.instagram.com/p/${post.code}`}
+                >
                   <Image
                     onClick={handleClick}
+                    loader={imageLoader}
                     priority
                     width={300}
                     height={300}
-                    src={event.img}
-                    alt={event.title}
+                    src={post.imageURL}
+                    alt={post.type}
                   />
                 </Link>
               </Carousel.Slide>
