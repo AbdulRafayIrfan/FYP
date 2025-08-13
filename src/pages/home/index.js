@@ -27,10 +27,6 @@ function Home({ posts }) {
     router.replace(link);
   }
 
-  function imageLoader({ src }) {
-    return src;
-  }
-
   return (
     <>
       <Head>
@@ -40,7 +36,7 @@ function Home({ posts }) {
         <Container size="md">
           <Carousel
             slideSize="30%"
-            height={300}
+            height={448}
             slideGap="md"
             loop
             withIndicators
@@ -54,10 +50,9 @@ function Home({ posts }) {
                 >
                   <Image
                     onClick={handleClick}
-                    loader={imageLoader}
+                    width={360}
+                    height={448}
                     priority
-                    width={300}
-                    height={300}
                     src={post.imageURL}
                     alt={post.type}
                   />
