@@ -57,7 +57,7 @@ async function updatePosts() {
 
   let writeBatch = db.batch();
   for (let i = 0; i < 6; i++) {
-    writeBatch.update(docs[i], posts[i]);
+    writeBatch.update(docs[i], { ...posts[i], updatedAt: Timestamp.now() });
   }
 
   try {
