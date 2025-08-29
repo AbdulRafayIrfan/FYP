@@ -7,7 +7,7 @@ function TechniqueSelector({ data, onClick }) {
     <Button
       onClick={() => onClick(data.name)}
       sx={{
-        height: "7rem",
+        height: "4rem",
         width: "100%",
       }}
       styles={{

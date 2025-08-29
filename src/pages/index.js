@@ -35,7 +35,7 @@ export default function Index() {
       </Head>
       {/* Loading animation here... */}
       {loading && (
-        <div className="text-center mt-[50%] bg-secondary">
+        <div className="text-center mt-[50vh] bg-secondary">
           <Loader color="white" size="xl" />
         </div>
       )}

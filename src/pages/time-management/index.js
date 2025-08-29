@@ -1,18 +1,14 @@
 import Layout from "@/components/layout";
 import Head from "next/head";
 import React, { useState } from "react";
-import {
-  Container,
-  Grid,
-  Text,
-} from "@mantine/core";
+import { Button, Container, Grid, Text } from "@mantine/core";
 import { protectedPage } from "@/components/hoc/protectedPage";
 import TechniqueSelector from "@/components/time-management/techniqueSelector";
 import TechniqueContent from "@/components/time-management/techniqueContent";
 
 function Index() {
   let techniquesData = require("../../misc/techniqueList.json");
-  const [selectedTechnique, setSelectedTechnique] = useState("Pomodoro");
+  const [selectedTechnique, setSelectedTechnique] = useState("POMODORO");
   return (
     <>
       <Head>
@@ -33,18 +29,18 @@ function Index() {
             </Text>
           </section>
           <Grid>
-            <Grid.Col span={4}>
-              {techniquesData.map((val, idx) => {
-                return (
+            {techniquesData.map((val, idx) => {
+              return (
+                <Grid.Col span={4} key={idx}>
                   <TechniqueSelector
                     onClick={setSelectedTechnique}
                     key={idx}
                     data={val}
                   />
-                );
-              })}
-            </Grid.Col>
-            <Grid.Col span={8}>
+                </Grid.Col>
+              );
+            })}
+            <Grid.Col span={12}>
               <TechniqueContent technique={selectedTechnique} />
             </Grid.Col>
           </Grid>

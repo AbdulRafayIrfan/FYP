@@ -6,7 +6,7 @@ import EisenhowerMatrix from "./eisenhowerMatrix";
 function TechniqueContent({ technique }) {
   function renderContent() {
     switch (technique) {
-      case "Pomodoro":
+      case "POMODORO":
         return <PomodoroTechnique />;
       case "52/17":
         return <FiftyTwoSeventeen />;
