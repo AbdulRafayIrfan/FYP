@@ -6,9 +6,8 @@ function FiftyTwoSeventeen() {
   const [mode, setMode] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(0);
 
-  // Set at 0.25 minutes for demonstration purposes
-  const workMinutes = 0.25;
-  const restMinutes = 0.25;
+  const workMinutes = 52;
+  const restMinutes = 17;
 
   const minutesMemo = useMemo(() => {
     return {
@@ -67,7 +66,7 @@ function FiftyTwoSeventeen() {
           <Text fz={"xl"} mt={"sm"} fw={"500"} c="dimmed">
             {mode === "Work" && secondsLeft > 0
               ? timerDisplay(secondsLeft)
-              : "00:15"}
+              : "52:00"}
           </Text>
         </Grid.Col>
         <Grid.Col span={6}>
@@ -77,7 +76,7 @@ function FiftyTwoSeventeen() {
           <Text fz={"xl"} mt={"sm"} fw={"500"} c="dimmed">
             {mode === "Rest" && secondsLeft > 0
               ? timerDisplay(secondsLeft)
-              : "00:15"}
+              : "17:00"}
           </Text>
         </Grid.Col>
       </Grid>
